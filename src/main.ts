@@ -8,13 +8,13 @@ const fileNameSpan = document.getElementById('file-name') as HTMLSpanElement;
 const openFileBtn = document.getElementById('open-file') as HTMLButtonElement;
 const themeToggleBtn = document.getElementById('theme-toggle') as HTMLButtonElement;
 
-// 配置 marked
+// 設定 marked
 marked.setOptions({
   breaks: true,
   gfm: true,
 });
 
-// 主题管理
+// 主題管理
 function loadTheme() {
   const savedTheme = localStorage.getItem('theme');
   if (savedTheme === 'dark') {
@@ -30,7 +30,7 @@ function toggleTheme() {
 
 async function openMarkdownFile() {
   try {
-    // 打开文件选择对话框
+    // 開啟檔案選擇對話框
     const selected = await open({
       multiple: false,
       filters: [{
@@ -40,27 +40,27 @@ async function openMarkdownFile() {
     });
 
     if (selected) {
-      // 读取文件内容
+      // 讀取檔案內容
       const content = await readTextFile(selected as string);
 
       // 渲染 Markdown
       const html = await marked(content);
       contentDiv.innerHTML = html;
 
-      // 显示文件名
+      // 顯示檔案名稱
       const fileName = (selected as string).split(/[\\/]/).pop() || '';
       fileNameSpan.textContent = fileName;
     }
   } catch (error) {
     console.error('Error opening file:', error);
-    contentDiv.innerHTML = `<p style="color: red;">打开文件时出错: ${error}</p>`;
+    contentDiv.innerHTML = `<p style="color: red;">開啟檔案時發生錯誤: ${error}</p>`;
   }
 }
 
-// 绑定按钮事件
+// 綁定按鈕事件
 openFileBtn.addEventListener('click', openMarkdownFile);
 themeToggleBtn.addEventListener('click', toggleTheme);
 
 // 初始化
 loadTheme();
-contentDiv.innerHTML = '<p style="color: var(--text-secondary); text-align: center; margin-top: 100px;">点击上方按钮打开 Markdown 文件</p>';
+contentDiv.innerHTML = '<p style="color: var(--text-secondary); text-align: center; margin-top: 100px;">點擊上方按鈕開啟 Markdown 檔案</p>';
