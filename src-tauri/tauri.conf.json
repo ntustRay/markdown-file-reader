@@ -29,15 +29,5 @@
     "active": true,
     "targets": "all"
   },
-  "plugins": {
-    "dialog": {
-      "all": true,
-      "open": true
-    },
-    "fs": {
-      "all": true,
-      "readFile": true,
-      "scope": ["$HOME/**"]
-    }
-  }
+  "plugins": {}
 }
