@@ -3,33 +3,103 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Markdown Reader</title>
+    <title>MarkView - Markdown 閱讀器</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
   </head>
   <body>
     <div id="app">
-      <div class="toolbar">
-        <button id="open-file">開啟 Markdown 檔案</button>
-        <span id="file-name"></span>
-        <button id="theme-toggle" class="theme-toggle" title="切換主題">
-          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="5"></circle>
-            <line x1="12" y1="1" x2="12" y2="3"></line>
-            <line x1="12" y1="21" x2="12" y2="23"></line>
-            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-            <line x1="1" y1="12" x2="3" y2="12"></line>
-            <line x1="21" y1="12" x2="23" y2="12"></line>
-            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-          </svg>
-          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-          </svg>
-        </button>
-      </div>
-      <div class="container">
-        <div id="content" class="markdown-body"></div>
-      </div>
+      <!-- Sidebar -->
+      <aside id="sidebar" class="sidebar">
+        <!-- Branding -->
+        <div class="sidebar-header">
+          <div class="sidebar-brand">
+            <span class="material-symbols-outlined">description</span>
+            <h1>MarkView</h1>
+          </div>
+          <p class="sidebar-version">v0.2.0 • Local Workspace</p>
+        </div>
+
+        <!-- Search -->
+        <div class="sidebar-search">
+          <div class="search-wrapper">
+            <span class="material-symbols-outlined search-icon">search</span>
+            <input type="text" id="search-input" class="search-input" placeholder="Quick Find..." />
+            <span class="search-shortcut">⌘K</span>
+          </div>
+        </div>
+
+        <!-- File List -->
+        <nav id="file-list" class="file-list">
+          <div class="file-section-header">
+            <span>最近開啟</span>
+            <span class="material-symbols-outlined">expand_more</span>
+          </div>
+        </nav>
+
+        <!-- Sidebar Footer -->
+        <div class="sidebar-footer">
+          <button id="open-folder" class="btn-primary">
+            <span class="material-symbols-outlined">folder_open</span>
+            <span>開啟資料夾</span>
+          </button>
+          <button id="open-file" class="btn-secondary">
+            <span class="material-symbols-outlined">insert_drive_file</span>
+            <span>開啟檔案</span>
+          </button>
+        </div>
+      </aside>
+
+      <!-- Main Content Area -->
+      <main class="main-content">
+        <!-- Top Navigation / Header -->
+        <header class="toolbar">
+          <!-- Breadcrumbs -->
+          <div class="breadcrumbs">
+            <span class="breadcrumb-item">Docs</span>
+            <span class="breadcrumb-separator">/</span>
+            <span id="file-name" class="breadcrumb-current">歡迎</span>
+          </div>
+
+          <!-- Actions -->
+          <div class="toolbar-actions">
+            <button id="save-file" class="btn-ghost" title="儲存檔案" style="display: none;">
+              <span class="material-symbols-outlined">save</span>
+              <span>儲存</span>
+            </button>
+            <button id="edit-mode-toggle" class="btn-ghost" title="切換編輯模式">
+              <span class="material-symbols-outlined">edit</span>
+              <span>編輯</span>
+            </button>
+            <div class="toolbar-divider"></div>
+            <button id="theme-toggle" class="btn-icon" title="切換主題">
+              <span class="material-symbols-outlined theme-icon">light_mode</span>
+            </button>
+          </div>
+        </header>
+
+        <!-- Content Area (Reader/Editor) -->
+        <div id="content-wrapper" class="content-wrapper">
+          <!-- Preview/Reader Mode -->
+          <div id="preview-pane" class="preview-pane">
+            <div class="markdown-canvas">
+              <div id="content" class="markdown-body"></div>
+            </div>
+          </div>
+
+          <!-- Editor Mode (Hidden by default) -->
+          <div id="editor-pane" class="editor-pane" style="display: none;">
+            <div class="editor-wrapper">
+              <div class="editor-gutter" id="editor-gutter"></div>
+              <textarea id="editor-textarea" class="editor-textarea" spellcheck="false"></textarea>
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
     <script type="module" src="/src/main.ts"></script>
   </body>

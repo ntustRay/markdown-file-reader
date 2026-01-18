@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Markdown Reader Light Mode</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#28728a",
+                        "background-light": "#ffffff",
+                        "background-dark": "#17191c",
+                        "sidebar": "#F7F7F9",
+                        "text-main": "#2C2F33",
+                        "text-muted": "#5a7f8c",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"],
+                    },
+                    boxShadow: {
+                        "soft": "0px 4px 12px rgba(0, 0, 0, 0.03)",
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for a cleaner look */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #E5E7EB;
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #D1D5DB;
+        }
+    </style>
+</head>
+<body class="bg-background-light text-text-main font-display h-screen w-full flex overflow-hidden selection:bg-primary/20 selection:text-primary">
+<!-- Sidebar -->
+<aside class="w-[280px] bg-sidebar border-r border-gray-100 flex flex-col h-full shrink-0 z-20">
+<!-- Branding -->
+<div class="px-6 pt-6 pb-2">
+<div class="flex items-center gap-2 mb-1">
+<span class="material-symbols-outlined text-primary" style="font-size: 24px;">description</span>
+<h1 class="text-lg font-bold tracking-tight text-text-main">MarkView</h1>
+</div>
+<p class="text-xs text-text-muted font-medium">v2.4.0 • Local Workspace</p>
+</div>
+<!-- Search -->
+<div class="px-4 py-4">
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-text-muted group-focus-within:text-primary transition-colors" style="font-size: 20px;">search</span>
+</div>
+<input class="block w-full pl-10 pr-3 py-2 border-none rounded-lg bg-white shadow-sm text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-primary/20 focus:bg-white transition-all" placeholder="Quick Find..." type="text"/>
+<div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+<span class="text-[10px] text-gray-400 border border-gray-200 rounded px-1.5 py-0.5">⌘K</span>
+</div>
+</div>
+</div>
+<!-- File Tree -->
+<nav class="flex-1 overflow-y-auto custom-scrollbar px-3 space-y-0.5 pb-4">
+<!-- Section Header -->
+<div class="px-3 py-2 mt-2 flex items-center justify-between group cursor-pointer">
+<span class="text-xs font-semibold text-gray-400 uppercase tracking-wider group-hover:text-primary transition-colors">Project Docs</span>
+<span class="material-symbols-outlined text-gray-400 text-[16px] opacity-0 group-hover:opacity-100 transition-opacity">expand_more</span>
+</div>
+<!-- Active File -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-white shadow-sm border border-gray-100 group relative" href="#">
+<div class="absolute left-0 top-2 bottom-2 w-1 bg-primary rounded-r-full"></div>
+<span class="material-symbols-outlined text-primary" style="font-size: 20px;">article</span>
+<span class="text-sm font-medium text-text-main">Introduction.md</span>
+</a>
+<!-- Inactive Files -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white hover:shadow-sm hover:border-gray-100 border border-transparent transition-all group" href="#">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-text-muted" style="font-size: 20px;">article</span>
+<span class="text-sm font-medium text-gray-600 group-hover:text-text-main">Installation.md</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white hover:shadow-sm hover:border-gray-100 border border-transparent transition-all group" href="#">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-text-muted" style="font-size: 20px;">article</span>
+<span class="text-sm font-medium text-gray-600 group-hover:text-text-main">API_Reference.md</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white hover:shadow-sm hover:border-gray-100 border border-transparent transition-all group" href="#">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-text-muted" style="font-size: 20px;">article</span>
+<span class="text-sm font-medium text-gray-600 group-hover:text-text-main">Changelog.md</span>
+</a>
+<div class="px-3 py-2 mt-6 flex items-center justify-between group cursor-pointer">
+<span class="text-xs font-semibold text-gray-400 uppercase tracking-wider group-hover:text-primary transition-colors">Assets</span>
+<span class="material-symbols-outlined text-gray-400 text-[16px]">chevron_right</span>
+</div>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white hover:shadow-sm hover:border-gray-100 border border-transparent transition-all group" href="#">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-text-muted" style="font-size: 20px;">folder</span>
+<span class="text-sm font-medium text-gray-600 group-hover:text-text-main">Images</span>
+</a>
+</nav>
+<!-- Sidebar Footer -->
+<div class="p-4 border-t border-gray-200/50 bg-sidebar">
+<button class="w-full flex items-center justify-center gap-2 h-10 bg-primary hover:bg-primary/90 text-white text-sm font-semibold rounded-lg shadow-sm transition-all transform active:scale-[0.98]">
+<span class="material-symbols-outlined" style="font-size: 20px;">add</span>
+<span>New File</span>
+</button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col h-full relative bg-white">
+<!-- Top Navigation / Header -->
+<header class="h-16 px-8 border-b border-gray-50 flex items-center justify-between shrink-0 bg-white/80 backdrop-blur-md z-10 sticky top-0">
+<!-- Breadcrumbs -->
+<div class="flex items-center gap-2 text-sm">
+<span class="text-gray-400 font-medium hover:text-text-main cursor-pointer transition-colors">Docs</span>
+<span class="text-gray-300 text-xs">/</span>
+<span class="text-gray-400 font-medium hover:text-text-main cursor-pointer transition-colors">Getting Started</span>
+<span class="text-gray-300 text-xs">/</span>
+<span class="text-text-main font-semibold bg-gray-50 px-2 py-0.5 rounded text-xs tracking-wide">Introduction.md</span>
+</div>
+<!-- Ghost Actions -->
+<div class="flex items-center gap-2">
+<button class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-transparent hover:border-gray-200 hover:bg-gray-50 text-gray-500 hover:text-primary transition-all text-sm font-medium group">
+<span class="material-symbols-outlined text-[20px] group-hover:scale-110 transition-transform">folder_open</span>
+<span class="hidden sm:inline">Reveal</span>
+</button>
+<div class="h-4 w-px bg-gray-200 mx-1"></div>
+<button class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-transparent hover:border-gray-200 hover:bg-gray-50 text-gray-500 hover:text-primary transition-all text-sm font-medium group">
+<span class="material-symbols-outlined text-[20px] group-hover:scale-110 transition-transform">edit</span>
+<span class="hidden sm:inline">Edit</span>
+</button>
+<button class="flex items-center justify-center w-9 h-9 rounded-lg border border-transparent hover:border-gray-200 hover:bg-gray-50 text-gray-500 hover:text-primary transition-all group ml-1">
+<span class="material-symbols-outlined text-[20px] group-hover:rotate-45 transition-transform">light_mode</span>
+</button>
+</div>
+</header>
+<!-- Markdown Reading Canvas -->
+<div class="flex-1 overflow-y-auto custom-scrollbar bg-white">
+<div class="max-w-[800px] mx-auto py-12 px-8 sm:px-12">
+<!-- Document Title -->
+<div class="mb-8 pb-6 border-b border-gray-100">
+<h1 class="text-4xl font-bold text-text-main tracking-tight leading-tight mb-4">Introduction to the Project</h1>
+<div class="flex items-center gap-4 text-sm text-gray-500">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-green-500"></span>
+<span>Published</span>
+</div>
+<span>•</span>
+<span>Last updated 2 days ago</span>
+<span>•</span>
+<span>5 min read</span>
+</div>
+</div>
+<!-- Markdown Content -->
+<article class="prose prose-slate max-w-none text-gray-600">
+<p class="text-lg leading-relaxed mb-8">
+                        Welcome to the documentation for <strong class="text-text-main">Project Nebula</strong>. This library aims to provide a robust set of tools for building scalable web applications with minimal configuration. It is designed to be intuitive for beginners while powerful enough for enterprise needs.
+                    </p>
+<!-- Blockquote -->
+<div class="flex gap-4 p-5 bg-[#F7F7F9] rounded-r-xl border-l-4 border-primary mb-10">
+<span class="material-symbols-outlined text-primary mt-1">info</span>
+<div>
+<p class="text-text-main font-medium mb-1">Important Note</p>
+<p class="text-sm text-gray-600 italic">
+                                This documentation covers version 2.0.1. If you are migrating from v1.x, please check the <a class="text-primary hover:underline decoration-primary/30" href="#">Migration Guide</a> first.
+                            </p>
+</div>
+</div>
+<h2 class="text-2xl font-semibold text-text-main mt-12 mb-6 flex items-center gap-2 group">
+<span class="text-primary/0 group-hover:text-primary/40 -ml-6 transition-colors font-normal">#</span>
+                        Quick Start
+                    </h2>
+<p class="mb-6 leading-7">
+                        To get started with Project Nebula, you'll need to install the package via npm or yarn. Ensure you have Node.js version 14 or higher installed on your machine.
+                    </p>
+<!-- Code Block -->
+<div class="relative group rounded-xl overflow-hidden bg-sidebar border border-gray-100 mb-10">
+<div class="flex items-center justify-between px-4 py-2 bg-gray-100/50 border-b border-gray-100">
+<span class="text-xs font-mono text-gray-500">bash</span>
+<button class="text-gray-400 hover:text-text-main transition-colors">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+</button>
+</div>
+<div class="p-5 overflow-x-auto">
+<pre class="font-mono text-sm leading-relaxed text-text-main"><code><span class="text-purple-600"># Install via npm</span>
+npm install @project-nebula/core
+
+<span class="text-purple-600"># Or via yarn</span>
+yarn add @project-nebula/core</code></pre>
+</div>
+</div>
+<h2 class="text-2xl font-semibold text-text-main mt-12 mb-6 flex items-center gap-2 group">
+<span class="text-primary/0 group-hover:text-primary/40 -ml-6 transition-colors font-normal">#</span>
+                        Core Features
+                    </h2>
+<ul class="space-y-4 mb-10">
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary mt-1 text-[20px]">check_circle</span>
+<span class="leading-7"><strong class="text-text-main font-medium">Zero Configuration:</strong> Works out of the box with sensible defaults for most modern web stacks.</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary mt-1 text-[20px]">check_circle</span>
+<span class="leading-7"><strong class="text-text-main font-medium">Type Safe:</strong> Built completely in TypeScript, providing you with first-class type definitions.</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary mt-1 text-[20px]">check_circle</span>
+<span class="leading-7"><strong class="text-text-main font-medium">Modular Architecture:</strong> Import only what you need. Tree-shaking is supported by default.</span>
+</li>
+</ul>
+<h2 class="text-2xl font-semibold text-text-main mt-12 mb-6 flex items-center gap-2 group">
+<span class="text-primary/0 group-hover:text-primary/40 -ml-6 transition-colors font-normal">#</span>
+                        Configuration
+                    </h2>
+<p class="mb-6 leading-7">
+                        You can create a `nebula.config.js` file in the root of your project to customize the behavior.
+                    </p>
+<!-- Code Block 2 -->
+<div class="relative group rounded-xl overflow-hidden bg-sidebar border border-gray-100 mb-10">
+<div class="flex items-center justify-between px-4 py-2 bg-gray-100/50 border-b border-gray-100">
+<span class="text-xs font-mono text-gray-500">nebula.config.js</span>
+<button class="text-gray-400 hover:text-text-main transition-colors">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+</button>
+</div>
+<div class="p-5 overflow-x-auto">
+<pre class="font-mono text-sm leading-relaxed text-text-main"><code>module.exports = {
+  <span class="text-blue-600">theme</span>: <span class="text-green-600">'dark'</span>,
+  <span class="text-blue-600">plugins</span>: [<span class="text-green-600">'@nebula/plugin-auth'</span>],
+  <span class="text-blue-600">experimental</span>: <span class="text-orange-600">true</span>
+}</code></pre>
+</div>
+</div>
+</article>
+<!-- Footer Navigation -->
+<div class="mt-16 pt-8 border-t border-gray-100 flex justify-between">
+<a class="group flex flex-col items-start gap-1 p-4 -ml-4 rounded-lg hover:bg-gray-50 transition-colors" href="#">
+<span class="text-xs text-gray-400 font-medium uppercase tracking-wide">Previous</span>
+<div class="flex items-center gap-2 text-text-main font-semibold group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]">arrow_back</span>
+<span>Getting Started</span>
+</div>
+</a>
+<a class="group flex flex-col items-end gap-1 p-4 -mr-4 rounded-lg hover:bg-gray-50 transition-colors" href="#">
+<span class="text-xs text-gray-400 font-medium uppercase tracking-wide">Next</span>
+<div class="flex items-center gap-2 text-text-main font-semibold group-hover:text-primary transition-colors">
+<span>Installation</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</div>
+</a>
+</div>
+<!-- Spacer -->
+<div class="h-24"></div>
+</div>
+</div>
+<!-- Floating Action Button (Optional, Contextual) -->
+<div class="absolute bottom-8 right-12">
+<button class="bg-white hover:bg-gray-50 text-gray-400 hover:text-primary shadow-soft border border-gray-100 rounded-full w-12 h-12 flex items-center justify-center transition-all duration-300 hover:-translate-y-1">
+<span class="material-symbols-outlined">vertical_align_top</span>
+</button>
+</div>
+</main>
+</body></html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Markdown Reader - True Dark Mode</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Config -->
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00838f",
+                        "background-light": "#f7f7f7",
+                        "background-dark": "#121212",
+                        "charcoal-light": "#1A1A1A",
+                        "border-dark": "#333333",
+                        "text-primary": "#E0E0E0",
+                        "text-secondary": "#A0A0A0",
+                        "accent-ghost": "#B2E0E8",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"],
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.125rem", 
+                        "lg": "0.25rem", 
+                        "xl": "0.5rem", 
+                        "full": "0.75rem"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom Scrollbar for True Dark Mode */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #121212;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #333333;
+            border-radius: 4px;
+            border: 2px solid #121212;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background-color: #444444;
+        }
+
+        /* Syntax Highlighting Colors */
+        .token-keyword { color: #c792ea; }
+        .token-function { color: #82aaff; }
+        .token-string { color: #c3e88d; }
+        .token-comment { color: #676e95; font-style: italic; }
+        .token-operator { color: #89ddff; }
+        .token-number { color: #f78c6c; }
+        .token-class { color: #ffcb6b; }
+    </style>
+</head>
+<body class="bg-background-dark text-text-primary font-display antialiased overflow-hidden selection:bg-primary/30 h-screen w-full flex">
+<!-- Sidebar Navigation -->
+<aside class="w-72 hidden md:flex flex-col border-r border-border-dark bg-[#121212] flex-shrink-0">
+<!-- Sidebar Header -->
+<div class="h-16 flex items-center px-6 border-b border-border-dark/50">
+<div class="flex items-center gap-3 text-text-primary">
+<span class="material-symbols-outlined text-primary">markdown</span>
+<h1 class="text-lg font-bold tracking-tight">MD Reader</h1>
+</div>
+</div>
+<!-- Scrollable Navigation -->
+<div class="flex-1 overflow-y-auto custom-scrollbar p-4 flex flex-col gap-8">
+<!-- Section 1 -->
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-center px-3 mb-1">
+<h2 class="text-xs font-semibold uppercase tracking-wider text-text-secondary">Library</h2>
+<span class="text-[10px] text-text-secondary/60 bg-white/5 px-1.5 py-0.5 rounded">LOCAL</span>
+</div>
+<nav class="flex flex-col gap-1">
+<button class="group flex items-center gap-3 px-3 py-2 rounded text-sm text-text-secondary hover:text-text-primary hover:bg-white/5 transition-colors text-left">
+<span class="material-symbols-outlined text-[20px] group-hover:text-accent-ghost/80 transition-colors">folder_open</span>
+<span>Personal Notes</span>
+</button>
+<button class="group flex items-center gap-3 px-3 py-2 rounded text-sm text-text-secondary hover:text-text-primary hover:bg-white/5 transition-colors text-left">
+<span class="material-symbols-outlined text-[20px] group-hover:text-accent-ghost/80 transition-colors">folder_open</span>
+<span>Work Projects</span>
+</button>
+</nav>
+</div>
+<!-- Section 2: Active Project -->
+<div class="flex flex-col gap-2">
+<h2 class="text-xs font-semibold uppercase tracking-wider text-text-secondary px-3 mb-1">Current Project</h2>
+<nav class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded text-sm text-text-secondary hover:text-text-primary hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-[18px]">article</span>
+<span class="truncate">Getting Started.md</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded text-sm text-text-secondary hover:text-text-primary hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-[18px]">article</span>
+<span class="truncate">API Documentation.md</span>
+</a>
+<!-- Active Item -->
+<a class="relative flex items-center gap-3 px-3 py-2 rounded text-sm bg-charcoal-light text-text-primary border-l-[3px] border-primary" href="#">
+<span class="material-symbols-outlined text-[18px] text-primary">description</span>
+<span class="font-medium truncate">Project Specs.md</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded text-sm text-text-secondary hover:text-text-primary hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-[18px]">article</span>
+<span class="truncate">Changelog.md</span>
+</a>
+</nav>
+</div>
+</div>
+<!-- Sidebar Footer -->
+<div class="p-4 border-t border-border-dark/50">
+<button class="flex w-full items-center gap-3 px-3 py-2 rounded text-sm text-text-secondary hover:text-text-primary hover:bg-white/5 transition-colors">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+<span>Settings</span>
+</button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col min-w-0 bg-[#121212] relative">
+<!-- Top Navbar -->
+<header class="h-16 flex items-center justify-between px-6 border-b border-border-dark bg-[#121212] z-10 shrink-0">
+<!-- Breadcrumbs -->
+<div class="flex items-center gap-2 overflow-hidden">
+<span class="material-symbols-outlined text-text-secondary md:hidden cursor-pointer hover:text-white mr-2">menu</span>
+<span class="text-text-secondary text-sm font-medium whitespace-nowrap">Library</span>
+<span class="text-text-secondary/50 text-sm">/</span>
+<span class="text-text-secondary text-sm font-medium whitespace-nowrap">Current Project</span>
+<span class="text-text-secondary/50 text-sm">/</span>
+<span class="text-text-primary text-sm font-semibold whitespace-nowrap truncate">Project Specs.md</span>
+</div>
+<!-- Action Buttons -->
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 h-9 px-4 rounded border border-accent-ghost text-accent-ghost text-xs font-bold uppercase tracking-wider hover:bg-accent-ghost/10 transition-all focus:ring-2 focus:ring-accent-ghost/50 focus:outline-none">
+<span class="material-symbols-outlined text-[16px]">edit</span>
+<span>Edit</span>
+</button>
+<button aria-label="Toggle Theme" class="flex items-center justify-center size-9 rounded border border-accent-ghost text-accent-ghost hover:bg-accent-ghost/10 transition-all focus:ring-2 focus:ring-accent-ghost/50 focus:outline-none">
+<span class="material-symbols-outlined text-[20px]">light_mode</span>
+</button>
+</div>
+</header>
+<!-- Document Content -->
+<div class="flex-1 overflow-y-auto custom-scrollbar w-full">
+<div class="max-w-4xl mx-auto px-6 py-12 md:px-12 lg:px-16">
+<!-- Headline & Meta -->
+<div class="mb-10 border-b border-border-dark pb-6">
+<h1 class="text-3xl md:text-4xl font-bold text-white mb-3 tracking-tight leading-tight">Project Specifications</h1>
+<div class="flex items-center gap-4 text-xs md:text-sm text-text-secondary">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-primary">schedule</span>
+<span>Last updated 2 hours ago</span>
+</div>
+<span class="text-border-dark">|</span>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]">person</span>
+<span>By Alex Chen</span>
+</div>
+<span class="text-border-dark">|</span>
+<span class="bg-primary/20 text-primary px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide">Draft</span>
+</div>
+</div>
+<!-- Markdown Content Simulation -->
+<div class="space-y-6 text-text-primary/90 leading-relaxed text-base md:text-lg">
+<p>
+                        This document outlines the technical specifications for the upcoming infrastructure migration. The primary goal is to enhance system reliability and reduce latency by 30%. All changes must be backward compatible with v2.4 API endpoints.
+                    </p>
+<h2 class="text-2xl font-semibold text-white mt-8 mb-4 flex items-center gap-2">
+<span class="text-primary/60">#</span> Core Requirements
+                    </h2>
+<p>The new architecture will rely on a microservices approach. Key deliverables include:</p>
+<ul class="list-none space-y-2 ml-1">
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-[20px] mt-0.5">check_small</span>
+<span>Implementation of <strong>OAuth 2.0</strong> for all service-to-service communication.</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-[20px] mt-0.5">check_small</span>
+<span>Containerization of legacy modules using Docker.</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-[20px] mt-0.5">check_small</span>
+<span>Real-time logging pipeline setup (ELK Stack).</span>
+</li>
+</ul>
+<h2 class="text-2xl font-semibold text-white mt-10 mb-4 flex items-center gap-2">
+<span class="text-primary/60">#</span> Configuration Schema
+                    </h2>
+<p>Below is the expected JSON structure for the initial configuration file. Please note the <code class="bg-white/10 px-1.5 py-0.5 rounded text-sm font-mono text-accent-ghost">timeout_ms</code> field default value change.</p>
+<!-- Code Block -->
+<div class="my-6 rounded-lg border border-border-dark overflow-hidden bg-[#181818]">
+<div class="flex items-center justify-between px-4 py-2 bg-[#1f1f1f] border-b border-border-dark">
+<span class="text-xs font-mono text-text-secondary">config.json</span>
+<button class="text-xs text-text-secondary hover:text-white flex items-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-[14px]">content_copy</span>
+                                Copy
+                            </button>
+</div>
+<div class="p-4 overflow-x-auto custom-scrollbar">
+<pre class="font-mono text-sm leading-6"><code><span class="token-operator">{</span>
+  <span class="token-class">"service_name"</span><span class="token-operator">:</span> <span class="token-string">"payment-gateway"</span><span class="token-operator">,</span>
+  <span class="token-class">"version"</span><span class="token-operator">:</span> <span class="token-number">3.1</span><span class="token-operator">,</span>
+  <span class="token-class">"retry_policy"</span><span class="token-operator">:</span> <span class="token-operator">{</span>
+    <span class="token-class">"max_attempts"</span><span class="token-operator">:</span> <span class="token-number">5</span><span class="token-operator">,</span>
+    <span class="token-class">"backoff_factor"</span><span class="token-operator">:</span> <span class="token-number">1.5</span>
+  <span class="token-operator">}</span><span class="token-operator">,</span>
+  <span class="token-class">"features"</span><span class="token-operator">:</span> <span class="token-operator">[</span>
+    <span class="token-string">"fraud_detection"</span><span class="token-operator">,</span>
+    <span class="token-string">"instant_settlement"</span> <span class="token-comment">// New in v3.1</span>
+  <span class="token-operator">]</span>
+<span class="token-operator">}</span></code></pre>
+</div>
+</div>
+<p>
+                        For further details on the environment setup, please refer to the <a class="text-primary hover:text-primary/80 underline decoration-primary/30 underline-offset-4 transition-colors" href="#">Setup Guide</a> located in the repository root.
+                    </p>
+<div class="h-24"></div> <!-- Spacer for bottom scrolling comfort -->
+</div>
+</div>
+</div>
+</main>
+<!-- Overlay Background for subtle texture (Optional but adds depth) -->
+<div class="fixed inset-0 pointer-events-none opacity-[0.02] bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] mix-blend-overlay z-50" data-alt="Subtle noise texture overlay"></div>
+</body></html>

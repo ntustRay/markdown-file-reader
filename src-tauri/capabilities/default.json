@@ -7,8 +7,27 @@
     "core:default",
     "dialog:allow-open",
     "dialog:default",
+    {
+      "identifier": "fs:allow-read-text-file",
+      "allow": [
+        { "path": "**" }
+      ]
+    },
+    {
+      "identifier": "fs:allow-write-text-file",
+      "allow": [
+        { "path": "**" }
+      ]
+    },
+    {
+      "identifier": "fs:allow-read-dir",
+      "allow": [
+        { "path": "**" }
+      ]
+    },
     "fs:allow-read-file",
-    "fs:allow-read-text-file",
+    "fs:allow-write-file",
     "fs:default"
-  ]
+  ],
+  "platforms": ["windows", "linux", "macOS"]
 }
