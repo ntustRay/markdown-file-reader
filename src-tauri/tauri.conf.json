@@ -1,7 +1,7 @@
 {
-  "productName": "Markdown Reader",
+  "productName": "MarkView",
   "version": "0.2.0",
-  "identifier": "com.markdown.reader",
+  "identifier": "com.markview.reader",
   "build": {
     "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:1420",
@@ -12,7 +12,7 @@
     "withGlobalTauri": true,
     "windows": [
       {
-        "title": "Markdown Reader",
+        "title": "MarkView",
         "width": 1200,
         "height": 800,
         "minWidth": 800,
@@ -34,7 +34,13 @@
       "icons/128x128@2x.png",
       "icons/icon.icns",
       "icons/icon.ico"
-    ]
+    ],
+    "android": {
+      "minSdkVersion": 24
+    },
+    "category": "Productivity",
+    "shortDescription": "Elegant Markdown Reader",
+    "longDescription": "MarkView is a beautiful and fast Markdown reader with dark mode support, split editor view, and file management. Perfect for reading documentation, notes, and articles."
   },
   "plugins": {}
 }

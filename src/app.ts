@@ -25,6 +25,12 @@ export class App {
   private currentContent: string = '';
   private hasUnsavedChanges: boolean = false;
   private searchQuery: string = '';
+  private isMobileMenuOpen: boolean = false;
+
+  // Mobile menu elements
+  private menuToggleBtn: HTMLButtonElement;
+  private sidebarOverlay: HTMLDivElement;
+  private sidebar: HTMLElement;
 
   constructor() {
     // Initialize services
@@ -47,7 +53,13 @@ export class App {
     this.fileListNav = document.getElementById('file-list') as HTMLElement;
     this.searchInput = document.getElementById('search-input') as HTMLInputElement;
 
+    // Mobile menu elements
+    this.menuToggleBtn = document.getElementById('menu-toggle') as HTMLButtonElement;
+    this.sidebarOverlay = document.getElementById('sidebar-overlay') as HTMLDivElement;
+    this.sidebar = document.getElementById('sidebar') as HTMLElement;
+
     this.setupEventListeners();
+    this.setupMobileMenu();
     this.showWelcomeMessage();
     this.updateThemeIcon();
   }
@@ -320,6 +332,11 @@ export class App {
           // Add active class to clicked item
           fileItem.classList.add('active');
 
+          // Close mobile menu if open
+          if (this.isMobileMenuOpen) {
+            this.closeMobileMenu();
+          }
+
           // Open file
           try {
             await this.fileService.openFileByPath(node.path);
@@ -379,5 +396,57 @@ export class App {
 
   private showError(message: string): void {
     this.contentDiv.innerHTML = `<p style="color: #ef4444; padding: 20px;">${message}</p>`;
+  }
+
+  private setupMobileMenu(): void {
+    // Toggle menu on button click
+    this.menuToggleBtn.addEventListener('click', () => this.toggleMobileMenu());
+
+    // Close menu on overlay click
+    this.sidebarOverlay.addEventListener('click', () => this.closeMobileMenu());
+
+    // Close menu on window resize if it becomes desktop
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 768 && this.isMobileMenuOpen) {
+        this.closeMobileMenu();
+      }
+    });
+
+    // Handle escape key to close menu
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && this.isMobileMenuOpen) {
+        this.closeMobileMenu();
+      }
+    });
+  }
+
+  private toggleMobileMenu(): void {
+    if (this.isMobileMenuOpen) {
+      this.closeMobileMenu();
+    } else {
+      this.openMobileMenu();
+    }
+  }
+
+  private openMobileMenu(): void {
+    this.isMobileMenuOpen = true;
+    this.sidebar.classList.add('open');
+    this.sidebarOverlay.classList.add('visible');
+    document.body.style.overflow = 'hidden';
+
+    // Update menu icon
+    const icon = this.menuToggleBtn.querySelector('.material-symbols-outlined');
+    if (icon) icon.textContent = 'close';
+  }
+
+  private closeMobileMenu(): void {
+    this.isMobileMenuOpen = false;
+    this.sidebar.classList.remove('open');
+    this.sidebarOverlay.classList.remove('visible');
+    document.body.style.overflow = '';
+
+    // Update menu icon
+    const icon = this.menuToggleBtn.querySelector('.material-symbols-outlined');
+    if (icon) icon.textContent = 'menu';
   }
 }

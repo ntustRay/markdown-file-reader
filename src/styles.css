@@ -956,22 +956,496 @@ body.dark ::-webkit-scrollbar-thumb:hover {
    Responsive Design
    ============================================ */
 
-@media (max-width: 768px) {
-  .sidebar {
-    width: 0;
-    transform: translateX(-100%);
-  }
+/* Mobile Menu Toggle Button */
+.menu-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-right: 8px;
+}
 
-  .sidebar.open {
-    width: 280px;
-    transform: translateX(0);
+.menu-toggle:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--primary);
+}
+
+body.dark .menu-toggle:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.menu-toggle .material-symbols-outlined {
+  font-size: 24px;
+}
+
+/* Sidebar Overlay for Mobile */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 99;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.sidebar-overlay.visible {
+  display: block;
+  opacity: 1;
+}
+
+/* Large Desktop (1440px+) */
+@media (min-width: 1440px) {
+  .sidebar {
+    width: 320px;
   }
 
   .markdown-canvas {
-    padding: 24px;
+    max-width: 900px;
+    padding: 64px 64px 120px;
   }
 
   .toolbar {
-    padding: 0 16px;
+    padding: 0 48px;
+  }
+}
+
+/* Desktop (1024px - 1439px) - Default styles apply */
+
+/* Tablet Landscape (768px - 1023px) */
+@media (max-width: 1023px) {
+  .sidebar {
+    width: 240px;
+  }
+
+  .markdown-canvas {
+    max-width: 100%;
+    padding: 32px 32px 80px;
+  }
+
+  .toolbar {
+    padding: 0 24px;
+  }
+
+  .breadcrumbs {
+    font-size: 13px;
+  }
+
+  .btn-ghost span:not(.material-symbols-outlined) {
+    display: none;
+  }
+
+  .btn-ghost {
+    padding: 8px;
+  }
+}
+
+/* Tablet Portrait (600px - 767px) */
+@media (max-width: 767px) {
+  .menu-toggle {
+    display: flex;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 300px;
+    z-index: 100;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: none;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
+  }
+
+  body.dark .sidebar.open {
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.4);
+  }
+
+  .main-content {
+    width: 100%;
+  }
+
+  .toolbar {
+    height: 56px;
+    padding: 0 12px;
+  }
+
+  .breadcrumbs {
+    flex: 1;
+    overflow: hidden;
+  }
+
+  .breadcrumb-item {
+    display: none;
+  }
+
+  .breadcrumb-separator {
+    display: none;
+  }
+
+  .breadcrumb-current {
+    font-size: 14px;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .markdown-canvas {
+    padding: 24px 20px 64px;
+  }
+
+  .markdown-body {
+    font-size: 15px;
+  }
+
+  .markdown-body h1 {
+    font-size: 1.8em;
+  }
+
+  .markdown-body h2 {
+    font-size: 1.5em;
+  }
+
+  .markdown-body h3 {
+    font-size: 1.25em;
+  }
+
+  .markdown-body pre {
+    padding: 16px;
+    font-size: 13px;
+  }
+
+  /* Split editor mode on tablet */
+  .content-wrapper {
+    flex-direction: column;
+  }
+
+  .editor-pane {
+    border-top: 1px solid var(--border-light);
+    max-height: 50vh;
+  }
+
+  body.dark .editor-pane {
+    border-top-color: var(--border-dark);
+  }
+}
+
+/* Mobile (up to 599px) */
+@media (max-width: 599px) {
+  .sidebar {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .sidebar-header {
+    padding: 16px 16px 8px;
+  }
+
+  .sidebar-brand h1 {
+    font-size: 16px;
+  }
+
+  .sidebar-search {
+    padding: 12px;
+  }
+
+  .search-input {
+    padding: 10px 70px 10px 40px;
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+
+  .file-list {
+    padding: 8px;
+  }
+
+  .file-item {
+    padding: 12px;
+    font-size: 15px;
+  }
+
+  .sidebar-footer {
+    padding: 12px;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    height: 44px;
+    font-size: 15px;
+  }
+
+  .toolbar {
+    height: 52px;
+    padding: 0 8px;
+  }
+
+  .toolbar-actions {
+    gap: 4px;
+  }
+
+  .btn-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .toolbar-divider {
+    margin: 0 2px;
+  }
+
+  .markdown-canvas {
+    padding: 16px 16px 48px;
+  }
+
+  .markdown-body {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .markdown-body h1 {
+    font-size: 1.6em;
+    margin-top: 24px;
+    margin-bottom: 12px;
+  }
+
+  .markdown-body h2 {
+    font-size: 1.35em;
+    margin-top: 20px;
+  }
+
+  .markdown-body h3 {
+    font-size: 1.15em;
+  }
+
+  .markdown-body ul,
+  .markdown-body ol {
+    padding-left: 24px;
+  }
+
+  .markdown-body pre {
+    padding: 12px;
+    font-size: 12px;
+    border-radius: 6px;
+    margin: 16px -16px;
+    border-radius: 0;
+  }
+
+  .markdown-body blockquote {
+    padding: 12px 16px;
+    margin: 16px 0;
+  }
+
+  .markdown-body table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .markdown-body table th,
+  .markdown-body table td {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+
+  /* Editor on mobile */
+  .editor-pane {
+    max-height: 40vh;
+  }
+
+  .editor-gutter {
+    width: 36px;
+    padding: 16px 8px 16px 0;
+    font-size: 11px;
+  }
+
+  .editor-textarea {
+    padding: 16px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* Save button full width on mobile when visible */
+  .save-file-mobile {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 12px 16px;
+    background: var(--surface-light);
+    border-top: 1px solid var(--border-light);
+    z-index: 50;
+  }
+
+  body.dark .save-file-mobile {
+    background: var(--surface-dark);
+    border-top-color: var(--border-dark);
+  }
+}
+
+/* Small Mobile (up to 374px) */
+@media (max-width: 374px) {
+  .sidebar-brand h1 {
+    font-size: 14px;
+  }
+
+  .breadcrumb-current {
+    max-width: 120px;
+  }
+
+  .markdown-canvas {
+    padding: 12px 12px 40px;
+  }
+
+  .markdown-body {
+    font-size: 13px;
+  }
+
+  .markdown-body pre {
+    font-size: 11px;
+    padding: 10px;
+  }
+}
+
+/* Touch Device Optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .file-item {
+    padding: 14px 12px;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    height: 48px;
+  }
+
+  .btn-icon {
+    width: 44px;
+    height: 44px;
+  }
+
+  .btn-ghost {
+    padding: 10px 14px;
+  }
+
+  /* Larger touch targets for links */
+  .markdown-body a {
+    padding: 2px 0;
+  }
+
+  /* Remove hover effects that don't work well on touch */
+  .file-item:hover {
+    background: transparent;
+  }
+
+  .file-item:active {
+    background: var(--surface-light);
+  }
+
+  body.dark .file-item:active {
+    background: rgba(255, 255, 255, 0.05);
+  }
+}
+
+/* Landscape orientation on mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+  .toolbar {
+    height: 48px;
+  }
+
+  .sidebar-header {
+    padding: 12px 16px 4px;
+  }
+
+  .sidebar-search {
+    padding: 8px 12px;
+  }
+
+  .file-list {
+    padding: 4px 8px;
+  }
+
+  .file-item {
+    padding: 8px 12px;
+  }
+
+  .sidebar-footer {
+    padding: 8px 12px;
+    flex-direction: row;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    height: 36px;
+    font-size: 13px;
+  }
+
+  .markdown-canvas {
+    padding: 16px 24px 32px;
+  }
+}
+
+/* Safe area insets for notched devices */
+@supports (padding: env(safe-area-inset-top)) {
+  .toolbar {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .sidebar {
+    padding-top: env(safe-area-inset-top);
+    padding-left: env(safe-area-inset-left);
+  }
+
+  .sidebar-footer {
+    padding-bottom: calc(12px + env(safe-area-inset-bottom));
+  }
+
+  @media (max-width: 599px) {
+    .markdown-canvas {
+      padding-bottom: calc(48px + env(safe-area-inset-bottom));
+    }
+  }
+}
+
+/* Print styles */
+@media print {
+  .sidebar,
+  .toolbar,
+  .menu-toggle,
+  .sidebar-overlay {
+    display: none !important;
+  }
+
+  .main-content {
+    width: 100% !important;
+  }
+
+  .markdown-canvas {
+    max-width: 100%;
+    padding: 0;
+  }
+
+  .markdown-body {
+    font-size: 12pt;
+  }
+
+  .markdown-body pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
   }
 }

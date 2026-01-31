@@ -13,6 +13,9 @@
   </head>
   <body>
     <div id="app">
+      <!-- Sidebar Overlay for Mobile -->
+      <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
       <!-- Sidebar -->
       <aside id="sidebar" class="sidebar">
         <!-- Branding -->
@@ -58,6 +61,11 @@
       <main class="main-content">
         <!-- Top Navigation / Header -->
         <header class="toolbar">
+          <!-- Mobile Menu Toggle -->
+          <button id="menu-toggle" class="menu-toggle" title="開啟選單">
+            <span class="material-symbols-outlined">menu</span>
+          </button>
+
           <!-- Breadcrumbs -->
           <div class="breadcrumbs">
             <span class="breadcrumb-item">Docs</span>
