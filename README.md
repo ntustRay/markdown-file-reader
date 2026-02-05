@@ -109,6 +109,14 @@ markdown-file-reader/
 └── vite.config.ts
 ```
 
+
+## 🔒 隱私與資料安全
+
+- 隱私政策（草案）: [`docs/PRIVACY_POLICY.md`](./docs/PRIVACY_POLICY.md)
+- Google Play Data Safety 對齊清單: [`docs/GOOGLE_PLAY_DATA_SAFETY_CHECKLIST.md`](./docs/GOOGLE_PLAY_DATA_SAFETY_CHECKLIST.md)
+
+> 上架前請將隱私政策發佈到公開 HTTPS URL，並填寫 Play Console Data safety 表單。
+
 ## 🧪 測試
 
 本專案採用測試驅動開發 (TDD) 方法，確保程式碼品質。

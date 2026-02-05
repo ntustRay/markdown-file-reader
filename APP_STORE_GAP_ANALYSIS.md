@@ -91,7 +91,7 @@ items:
   - id: C02
     title: Publish privacy policy and align Data safety form
     priority: P0
-    status: TODO
+    status: IN_PROGRESS
     owner: product
     dependencies: [C01]
     acceptance:
