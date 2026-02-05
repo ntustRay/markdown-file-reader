@@ -146,8 +146,8 @@ export class App {
       // Update file name display
       this.fileNameSpan.textContent = file.name;
 
-      // Render markdown
-      await this.renderMarkdown(file.content);
+      // Render content by file type
+      await this.renderContent(file.content, file.name);
 
       // Update editor if in edit mode
       if (this.isEditMode) {
@@ -174,9 +174,19 @@ export class App {
     }
   }
 
-  private async renderMarkdown(content: string): Promise<void> {
+  private async renderContent(content: string, fileName?: string): Promise<void> {
+    if (this.isPlainTextFile(fileName)) {
+      this.contentDiv.innerHTML = this.markdownService.renderPlainText(content);
+      return;
+    }
+
     const html = await this.markdownService.render(content);
     this.contentDiv.innerHTML = html;
+  }
+
+  private isPlainTextFile(fileName?: string): boolean {
+    if (!fileName) return false;
+    return fileName.toLowerCase().endsWith('.txt');
   }
 
   private handleThemeToggle(): void {
@@ -233,7 +243,8 @@ export class App {
   private async handleEditorInput(): Promise<void> {
     this.currentContent = this.editorTextarea.value;
     this.hasUnsavedChanges = true;
-    await this.renderMarkdown(this.currentContent);
+    const currentFileName = this.fileService.getCurrentFile()?.name;
+    await this.renderContent(this.currentContent, currentFileName);
     this.updateLineNumbers();
     this.updateSaveButtonState();
   }

@@ -1,12 +1,14 @@
-# MarkView - Markdown 閱讀器
+# QuillTide Reader - Markdown 閱讀器
 
-一個使用 Tauri 構建的現代化跨平台 Markdown 閱讀器與編輯器應用程式。
+一個使用 Tauri 構建、以本地優先（local-first）為核心的跨平台 Markdown 閱讀器與編輯器。
 
 ![Version](https://img.shields.io/badge/version-0.2.0-blue)
 ![Test](https://img.shields.io/badge/tests-30%20passed-green)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
 ## ✨ 功能特性
+
+> No cloud sync, no collaborative editing (for now).
 
 ### 核心功能
 - 📖 **Markdown 閱讀器**: 優雅的閱讀介面，支援 GitHub Flavored Markdown (GFM)
@@ -106,6 +108,14 @@ markdown-file-reader/
 ├── vitest.config.ts
 └── vite.config.ts
 ```
+
+
+## 🔒 隱私與資料安全
+
+- 隱私政策（草案）: [`docs/PRIVACY_POLICY.md`](./docs/PRIVACY_POLICY.md)
+- Google Play Data Safety 對齊清單: [`docs/GOOGLE_PLAY_DATA_SAFETY_CHECKLIST.md`](./docs/GOOGLE_PLAY_DATA_SAFETY_CHECKLIST.md)
+
+> 上架前請將隱私政策發佈到公開 HTTPS URL，並填寫 Play Console Data safety 表單。
 
 ## 🧪 測試
 
@@ -211,6 +221,6 @@ MIT License
 
 ---
 
-**製作**: MarkView Team
+**製作**: QuillTide Team
 **版本**: v0.2.0
 **最後更新**: 2026-01-18
