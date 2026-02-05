@@ -80,7 +80,7 @@ items:
   - id: C01
     title: Finalize app name and package naming baseline
     priority: P0
-    status: TODO
+    status: DONE
     owner: product
     dependencies: []
     acceptance:

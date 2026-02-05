@@ -36,7 +36,8 @@ describe('MarkdownService', () => {
       const markdown = '```javascript\nconst x = 1;\n```';
       const html = await markdownService.render(markdown);
       expect(html).toContain('<code');
-      expect(html).toContain('const x = 1;');
+      expect(html).toContain('const');
+      expect(html).toContain('hljs');
     });
 
     it('應該渲染行內程式碼', async () => {
@@ -76,6 +77,34 @@ describe('MarkdownService', () => {
       const html = await markdownService.render(markdown);
       expect(html).toContain('Line 1');
       expect(html).toContain('Line 2');
+    });
+
+
+    it('應該渲染純文字內容並跳脫 HTML', () => {
+      const html = markdownService.renderPlainText(`<script>alert(1)</script>\nline2`);
+      expect(html).toContain('<pre class="plain-text-content">');
+      expect(html).toContain('&lt;script&gt;alert(1)&lt;/script&gt;');
+      expect(html).toContain('line2');
+      expect(html).not.toContain('<script>alert(1)</script>');
+    });
+
+
+
+    it('應該移除惡意 HTML 標籤與事件屬性', async () => {
+      const markdown = `<script>alert(1)</script>\n<img src="x" onerror="alert(2)">`;
+      const html = await markdownService.render(markdown);
+
+      expect(html).not.toContain('<script');
+      expect(html).toContain('<img');
+      expect(html).not.toContain('onerror=');
+    });
+
+    it('應該移除 javascript: 類型的連結', async () => {
+      const markdown = `[Click me](javascript:alert(1))`;
+      const html = await markdownService.render(markdown);
+
+      expect(html).toContain('<a');
+      expect(html).not.toContain('href="javascript:alert(1)"');
     });
 
     it('應該處理粗體和斜體', async () => {

@@ -1,7 +1,7 @@
 {
-  "productName": "MarkView",
+  "productName": "QuillTide Reader",
   "version": "0.2.0",
-  "identifier": "com.markview.reader",
+  "identifier": "com.quilltide.reader",
   "build": {
     "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:1420",
@@ -12,7 +12,7 @@
     "withGlobalTauri": true,
     "windows": [
       {
-        "title": "MarkView",
+        "title": "QuillTide Reader",
         "width": 1200,
         "height": 800,
         "minWidth": 800,
@@ -39,8 +39,8 @@
       "minSdkVersion": 24
     },
     "category": "Productivity",
-    "shortDescription": "Elegant Markdown Reader",
-    "longDescription": "MarkView is a beautiful and fast Markdown reader with dark mode support, split editor view, and file management. Perfect for reading documentation, notes, and articles."
+    "shortDescription": "Offline Markdown Reader & Editor",
+    "longDescription": "QuillTide Reader is a local-first Markdown reader and editor with dark mode, split editing, and folder-based file management. No cloud sync or collaborative editing for now."
   },
   "plugins": {}
 }
