@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MarkView - Markdown 閱讀器</title>
+    <title>QuillTide Reader - Markdown 閱讀器</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -22,7 +22,7 @@
         <div class="sidebar-header">
           <div class="sidebar-brand">
             <span class="material-symbols-outlined">description</span>
-            <h1>MarkView</h1>
+            <h1>QuillTide</h1>
           </div>
           <p class="sidebar-version">v0.2.0 • Local Workspace</p>
         </div>
@@ -36,11 +36,20 @@
           </div>
         </div>
 
-        <!-- File List -->
+        <!-- Pinned Files -->
+        <nav id="pinned-list" class="file-list pinned-list">
+          <div class="file-section-header" id="pinned-header" style="display: none;">
+            <span class="material-symbols-outlined section-icon">push_pin</span>
+            <span>釘選</span>
+          </div>
+        </nav>
+
+        <!-- File List / Recent Files -->
         <nav id="file-list" class="file-list">
-          <div class="file-section-header">
+          <div class="file-section-header" id="recent-header">
+            <span class="material-symbols-outlined section-icon">schedule</span>
             <span>最近開啟</span>
-            <span class="material-symbols-outlined">expand_more</span>
+            <span class="material-symbols-outlined expand-icon">expand_more</span>
           </div>
         </nav>
 

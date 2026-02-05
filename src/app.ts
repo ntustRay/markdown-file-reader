@@ -1,11 +1,14 @@
 import { FileService, FileTreeNode } from './services/FileService';
 import { ThemeService } from './services/ThemeService';
 import { MarkdownService } from './services/MarkdownService';
+import { errorService, type AppError } from './services/ErrorService';
+import { RecentFilesService, type RecentFileEntry } from './services/RecentFilesService';
 
 export class App {
   private fileService: FileService;
   private themeService: ThemeService;
   private markdownService: MarkdownService;
+  private recentFilesService: RecentFilesService;
 
   private contentDiv: HTMLDivElement;
   private fileNameSpan: HTMLSpanElement;
@@ -19,6 +22,7 @@ export class App {
   private editorTextarea: HTMLTextAreaElement;
   private editorGutter: HTMLDivElement;
   private fileListNav: HTMLElement;
+  private pinnedListNav: HTMLElement;
   private searchInput: HTMLInputElement;
 
   private isEditMode: boolean = false;
@@ -37,6 +41,7 @@ export class App {
     this.fileService = new FileService();
     this.themeService = new ThemeService();
     this.markdownService = new MarkdownService();
+    this.recentFilesService = new RecentFilesService();
 
     // Get DOM elements
     this.contentDiv = document.getElementById('content') as HTMLDivElement;
@@ -51,6 +56,7 @@ export class App {
     this.editorTextarea = document.getElementById('editor-textarea') as HTMLTextAreaElement;
     this.editorGutter = document.getElementById('editor-gutter') as HTMLDivElement;
     this.fileListNav = document.getElementById('file-list') as HTMLElement;
+    this.pinnedListNav = document.getElementById('pinned-list') as HTMLElement;
     this.searchInput = document.getElementById('search-input') as HTMLInputElement;
 
     // Mobile menu elements
@@ -62,6 +68,10 @@ export class App {
     this.setupMobileMenu();
     this.showWelcomeMessage();
     this.updateThemeIcon();
+    this.renderRecentFiles();
+
+    // Listen for recent files changes
+    this.recentFilesService.onChange(() => this.renderRecentFiles());
   }
 
   private setupEventListeners(): void {
@@ -102,8 +112,11 @@ export class App {
       await this.fileService.openFile();
       // File opened event will be handled by the listener
     } catch (error) {
-      console.error('Error opening file:', error);
-      this.showError(`開啟檔案時發生錯誤: ${error}`);
+      if (this.isAppError(error)) {
+        this.showError(error);
+      } else {
+        this.showError(`開啟檔案時發生錯誤: ${error}`);
+      }
     }
   }
 
@@ -112,8 +125,11 @@ export class App {
       await this.fileService.openFolder();
       // Folder opened event will be handled by the listener
     } catch (error) {
-      console.error('Error opening folder:', error);
-      this.showError(`開啟資料夾時發生錯誤: ${error}`);
+      if (this.isAppError(error)) {
+        this.showError(error);
+      } else {
+        this.showError(`開啟資料夾時發生錯誤: ${error}`);
+      }
     }
   }
 
@@ -132,10 +148,19 @@ export class App {
           textSpan.textContent = originalText || '儲存';
         }, 2000);
       }
+
+      errorService.logInfo('檔案儲存成功');
     } catch (error) {
-      console.error('Error saving file:', error);
-      this.showError(`儲存檔案時發生錯誤: ${error}`);
+      if (this.isAppError(error)) {
+        this.showError(error);
+      } else {
+        this.showError(`儲存檔案時發生錯誤: ${error}`);
+      }
     }
+  }
+
+  private isAppError(error: unknown): error is AppError {
+    return typeof error === 'object' && error !== null && 'code' in error && 'message' in error;
   }
 
   private async handleFileOpened(file: { path: string; content: string; name: string }): Promise<void> {
@@ -145,6 +170,9 @@ export class App {
 
       // Update file name display
       this.fileNameSpan.textContent = file.name;
+
+      // Add to recent files
+      this.recentFilesService.addRecentFile(file.path, file.name);
 
       // Render content by file type
       await this.renderContent(file.content, file.name);
@@ -157,8 +185,11 @@ export class App {
 
       this.updateSaveButtonState();
     } catch (error) {
-      console.error('Error rendering markdown:', error);
-      this.showError(`渲染 Markdown 時發生錯誤: ${error}`);
+      if (this.isAppError(error)) {
+        this.showError(error);
+      } else {
+        this.showError(`渲染 Markdown 時發生錯誤: ${error}`);
+      }
     }
   }
 
@@ -279,6 +310,87 @@ export class App {
     this.renderTreeNodes(tree, this.fileListNav);
   }
 
+  private renderRecentFiles(): void {
+    const pinnedFiles = this.recentFilesService.getPinnedFiles();
+    const recentFiles = this.recentFilesService.getUnpinnedFiles();
+
+    // Render pinned files
+    const pinnedHeader = this.pinnedListNav.querySelector('#pinned-header') as HTMLElement;
+    this.pinnedListNav.innerHTML = '';
+
+    if (pinnedFiles.length > 0) {
+      if (pinnedHeader) {
+        pinnedHeader.style.display = 'flex';
+        this.pinnedListNav.appendChild(pinnedHeader);
+      }
+      pinnedFiles.forEach(file => this.renderRecentFileItem(file, this.pinnedListNav, true));
+    }
+
+    // Render recent files (only if no folder is open)
+    if (this.fileService.getFileTree().length === 0) {
+      const recentHeader = this.fileListNav.querySelector('#recent-header') as HTMLElement;
+      this.fileListNav.innerHTML = '';
+
+      if (recentHeader) {
+        this.fileListNav.appendChild(recentHeader);
+      }
+
+      recentFiles.forEach(file => this.renderRecentFileItem(file, this.fileListNav, false));
+    }
+  }
+
+  private renderRecentFileItem(file: RecentFileEntry, container: HTMLElement, isPinned: boolean): void {
+    const fileItem = document.createElement('div');
+    const isActive = this.fileService.getCurrentFile()?.path === file.path;
+    fileItem.className = `file-item recent-file-item ${isActive ? 'active' : ''}`;
+
+    const relativeTime = RecentFilesService.getRelativeTime(file.lastOpened);
+
+    fileItem.innerHTML = `
+      <span class="material-symbols-outlined file-icon">article</span>
+      <div class="file-info">
+        <span class="file-name">${file.name}</span>
+        <span class="file-time">${relativeTime}</span>
+      </div>
+      <button class="pin-btn" title="${isPinned ? '取消釘選' : '釘選'}">
+        <span class="material-symbols-outlined">${isPinned ? 'push_pin' : 'keep'}</span>
+      </button>
+    `;
+
+    // Click to open file
+    fileItem.addEventListener('click', async (e) => {
+      if ((e.target as HTMLElement).closest('.pin-btn')) return;
+
+      container.querySelectorAll('.file-item').forEach(item => item.classList.remove('active'));
+      fileItem.classList.add('active');
+
+      if (this.isMobileMenuOpen) {
+        this.closeMobileMenu();
+      }
+
+      try {
+        await this.fileService.openFileByPath(file.path);
+      } catch (error) {
+        // File might have been moved/deleted
+        this.recentFilesService.removeFile(file.path);
+        if (this.isAppError(error)) {
+          this.showError(error);
+        } else {
+          this.showError(`無法開啟檔案，可能已被移動或刪除`);
+        }
+      }
+    });
+
+    // Pin button click
+    const pinBtn = fileItem.querySelector('.pin-btn');
+    pinBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      this.recentFilesService.togglePin(file.path);
+    });
+
+    container.appendChild(fileItem);
+  }
+
   private renderTreeNodes(nodes: FileTreeNode[], container: HTMLElement): void {
     nodes.forEach((node) => {
       if (node.isDirectory) {
@@ -352,8 +464,11 @@ export class App {
           try {
             await this.fileService.openFileByPath(node.path);
           } catch (error) {
-            console.error('Error opening file:', error);
-            this.showError(`開啟檔案時發生錯誤: ${error}`);
+            if (this.isAppError(error)) {
+              this.showError(error);
+            } else {
+              this.showError(`開啟檔案時發生錯誤: ${error}`);
+            }
           }
         });
 
@@ -405,8 +520,28 @@ export class App {
     `;
   }
 
-  private showError(message: string): void {
-    this.contentDiv.innerHTML = `<p style="color: #ef4444; padding: 20px;">${message}</p>`;
+  private showError(error: string | AppError): void {
+    let errorHtml: string;
+
+    if (typeof error === 'string') {
+      errorHtml = `
+        <div style="padding: 24px; text-align: center;">
+          <span class="material-symbols-outlined" style="font-size: 48px; color: #ef4444;">error</span>
+          <p style="color: #ef4444; margin-top: 16px; font-size: 16px;">${error}</p>
+        </div>
+      `;
+    } else {
+      errorHtml = `
+        <div style="padding: 24px; text-align: center;">
+          <span class="material-symbols-outlined" style="font-size: 48px; color: #ef4444;">error</span>
+          <h3 style="color: #ef4444; margin-top: 16px;">${error.message}</h3>
+          ${error.details ? `<p style="color: var(--text-muted); margin-top: 8px; font-size: 14px;">${error.details}</p>` : ''}
+          <p style="color: var(--text-muted); margin-top: 12px; font-size: 12px;">錯誤代碼: ${error.code}</p>
+        </div>
+      `;
+    }
+
+    this.contentDiv.innerHTML = errorHtml;
   }
 
   private setupMobileMenu(): void {

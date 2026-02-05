@@ -1,5 +1,6 @@
 import { open } from '@tauri-apps/plugin-dialog';
 import { readTextFile, writeTextFile, readDir } from '@tauri-apps/plugin-fs';
+import { errorService, ErrorCode, type AppError } from './ErrorService';
 
 export interface FileInfo {
   path: string;
@@ -40,6 +41,9 @@ export class FileService {
 
       // Normalize path to use forward slashes
       const path = (selected as string).replace(/\\/g, '/');
+
+      errorService.logInfo('開啟檔案', { path });
+
       const content = await readTextFile(path);
       const name = this.getFileName(path);
 
@@ -47,9 +51,16 @@ export class FileService {
       this.currentFile = fileInfo;
       this.notifyFileOpenListeners(fileInfo);
 
+      errorService.logInfo('檔案開啟成功', { path, size: content.length });
+
       return fileInfo;
     } catch (error) {
-      throw error;
+      const appError = errorService.fromNativeError(
+        error,
+        ErrorCode.FILE_READ_ERROR,
+        { operation: 'openFile' }
+      );
+      throw appError;
     }
   }
 
@@ -68,6 +79,8 @@ export class FileService {
       const folderPath = (selected as string).replace(/\\/g, '/');
       this.currentFolder = folderPath;
 
+      errorService.logInfo('開啟資料夾', { path: folderPath });
+
       // Build file tree
       this.fileTree = await this.buildFileTree(folderPath, 0);
 
@@ -82,9 +95,19 @@ export class FileService {
         this.notifyFileOpenListeners(this.folderFiles[0]);
       }
 
+      errorService.logInfo('資料夾開啟成功', {
+        path: folderPath,
+        fileCount: this.folderFiles.length,
+      });
+
       return this.folderFiles;
     } catch (error) {
-      throw error;
+      const appError = errorService.fromNativeError(
+        error,
+        ErrorCode.FOLDER_READ_ERROR,
+        { operation: 'openFolder' }
+      );
+      throw appError;
     }
   }
 
@@ -191,14 +214,30 @@ export class FileService {
 
   async saveFile(content: string): Promise<void> {
     if (!this.currentFile) {
-      throw new Error('No file is currently open');
+      throw errorService.createError(
+        ErrorCode.FILE_WRITE_ERROR,
+        '沒有開啟的檔案',
+        { operation: 'saveFile' }
+      );
     }
 
     try {
+      errorService.logInfo('儲存檔案', { path: this.currentFile.path });
+
       await writeTextFile(this.currentFile.path, content);
       this.currentFile.content = content;
+
+      errorService.logInfo('檔案儲存成功', {
+        path: this.currentFile.path,
+        size: content.length,
+      });
     } catch (error) {
-      throw error;
+      const appError = errorService.fromNativeError(
+        error,
+        ErrorCode.FILE_WRITE_ERROR,
+        { operation: 'saveFile', path: this.currentFile.path }
+      );
+      throw appError;
     }
   }
 

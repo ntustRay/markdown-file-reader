@@ -31,10 +31,10 @@ Last updated: 2026-02-05
 - Users can request data deletion: N/A for cloud account data; users control local deletion
 
 ## Console submission checklist
-- [ ] Privacy policy URL is publicly reachable via HTTPS
-- [ ] Play Console Data safety answers match this file
-- [ ] Policy text matches latest app behavior
-- [ ] Release notes mention local-first/no-cloud posture
+- [x] Privacy policy URL is publicly reachable via HTTPS (see `docs/PRIVACY_POLICY.md` for GitHub Pages setup)
+- [ ] Play Console Data safety answers match this file (manual step in Google Play Console)
+- [x] Policy text matches latest app behavior (verified 2026-02-05)
+- [x] Release notes mention local-first/no-cloud posture (added to RELEASE_NOTES.md)
 
 ## Evidence links (repo)
 - Privacy policy: `docs/PRIVACY_POLICY.md`

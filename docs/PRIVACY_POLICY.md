@@ -48,6 +48,14 @@ QuillTide Reader is a **local-first** Markdown reader/editor.
 If you have privacy questions, open an issue in this repository.
 
 ## Public policy URL (for store listing)
-When published, host this file at a public HTTPS URL, for example:
-- `https://<your-domain>/privacy-policy`
-- or GitHub Pages URL for this repository.
+
+**GitHub Pages URL (recommended):**
+```
+https://ntustray.github.io/markdown-file-reader/PRIVACY_POLICY
+```
+
+To enable:
+1. Go to repository Settings → Pages
+2. Set Source to "Deploy from a branch" → `master` (or `main`) → `/docs` folder
+3. Save and wait for deployment
+4. Use the above URL in Google Play Console

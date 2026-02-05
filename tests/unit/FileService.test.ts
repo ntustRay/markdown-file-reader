@@ -52,7 +52,10 @@ describe('FileService', () => {
       vi.mocked(open).mockResolvedValue(mockPath);
       vi.mocked(readTextFile).mockRejectedValue(new Error('Read error'));
 
-      await expect(fileService.openFile()).rejects.toThrow('Read error');
+      await expect(fileService.openFile()).rejects.toMatchObject({
+        code: 'E1002',
+        message: '讀取檔案時發生錯誤',
+      });
     });
   });
 
@@ -199,7 +202,10 @@ describe('FileService', () => {
     });
 
     it('應該在沒有開啟檔案時拋出錯誤', async () => {
-      await expect(fileService.saveFile('content')).rejects.toThrow('No file is currently open');
+      await expect(fileService.saveFile('content')).rejects.toMatchObject({
+        code: 'E1003',
+        message: '儲存檔案時發生錯誤',
+      });
     });
   });
 });
