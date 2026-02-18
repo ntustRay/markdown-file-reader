@@ -10,7 +10,7 @@ export interface ExportOptions {
 
 export class ExportService {
   // 匯出為 HTML
-  async exportToHtml(content: string, renderedHtml: string, options: ExportOptions): Promise<string> {
+  async exportToHtml(_content: string, renderedHtml: string, options: ExportOptions): Promise<string> {
     const styles = options.includeStyles ? this.getDefaultStyles() : '';
 
     const html = `<!DOCTYPE html>

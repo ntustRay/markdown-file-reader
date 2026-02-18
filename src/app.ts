@@ -318,11 +318,12 @@ export class App {
     const pinnedHeader = this.pinnedListNav.querySelector('#pinned-header') as HTMLElement;
     this.pinnedListNav.innerHTML = '';
 
+    if (pinnedHeader) {
+      pinnedHeader.style.display = pinnedFiles.length > 0 ? 'flex' : 'none';
+      this.pinnedListNav.appendChild(pinnedHeader);
+    }
+
     if (pinnedFiles.length > 0) {
-      if (pinnedHeader) {
-        pinnedHeader.style.display = 'flex';
-        this.pinnedListNav.appendChild(pinnedHeader);
-      }
       pinnedFiles.forEach(file => this.renderRecentFileItem(file, this.pinnedListNav, true));
     }
 
@@ -496,7 +497,8 @@ export class App {
   private highlightMatch(text: string): string {
     if (!this.searchQuery) return text;
 
-    const regex = new RegExp(`(${this.searchQuery})`, 'gi');
+    const escaped = this.searchQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(`(${escaped})`, 'gi');
     return text.replace(regex, '<mark class="search-highlight">$1</mark>');
   }
 

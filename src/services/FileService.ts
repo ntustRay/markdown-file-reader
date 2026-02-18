@@ -273,8 +273,12 @@ export class FileService {
       this.currentFile = fileInfo;
       this.notifyFileOpenListeners(fileInfo);
     } catch (error) {
-      console.error(`Error opening file at path ${path}:`, error);
-      throw error;
+      const appError = errorService.fromNativeError(
+        error,
+        ErrorCode.FILE_READ_ERROR,
+        { operation: 'openFileByPath', path }
+      );
+      throw appError;
     }
   }
 

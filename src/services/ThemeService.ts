@@ -6,8 +6,8 @@ export class ThemeService {
 
   constructor() {
     // Load theme from localStorage or default to light
-    const savedTheme = localStorage.getItem('theme') as Theme | null;
-    this.currentTheme = savedTheme || 'light';
+    const savedTheme = localStorage.getItem('theme');
+    this.currentTheme = (savedTheme === 'dark' || savedTheme === 'light') ? savedTheme : 'light';
     this.applyTheme(this.currentTheme);
   }
 
