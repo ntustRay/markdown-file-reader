@@ -1,78 +1,75 @@
-# QuillTide Reader v0.2.0
+# QuillTide Reader — 版本更新說明
 
-## 🌏 繁體中文版本
+## v0.2.0（2026-02-05）
 
-此版本將所有介面文字、文件和說明翻譯為繁體中文。
+### 本版重點
 
-## 🔒 隱私與資料安全
+v0.2.0 是功能大幅擴展的版本，完成 Google Play 上架所需的 P0/P1 準備工作（C01–C08），並將 App 正式命名為 **QuillTide Reader**。
 
-QuillTide Reader 採用 **本地優先 (Local-first)** 設計：
+### 新功能
 
-- **無雲端同步**：所有檔案僅在您的裝置上處理，不會上傳至任何伺服器
-- **無協作功能**：不提供需要網路連線的即時協作編輯
-- **無資料收集**：我們不收集任何個人資料、檔案內容或使用行為分析
-- **本地儲存偏好設定**：主題設定等偏好僅儲存於裝置本地 (localStorage)
+**P0 核心（上架必要）**
 
-詳細隱私政策請參閱：[Privacy Policy](docs/PRIVACY_POLICY.md)
+- App 正式命名為 **QuillTide Reader**（package：`com.quilltide.reader`）
+- XSS 防護：Markdown 渲染層加入 HTML sanitize，阻擋惡意腳本（17 個攻擊樣本測試）
+- 統一錯誤處理：ErrorService，錯誤碼 E1xxx–E3xxx，可診斷的錯誤訊息
+- 隱私政策文件：`docs/PRIVACY_POLICY.md`，本地優先聲明
 
-### 變更內容
+**P1 留存功能**
 
-- ✨ 所有使用者介面文字轉換為繁體中文
-- 📝 README.md 翻譯為繁體中文
-- 📄 專案文件全面繁體中文化
-- 🔧 程式碼註解更新為繁體中文
+- 最近開啟清單 + 釘選：RecentFilesService，重啟後狀態保留
+- 匯出功能：ExportService，支援 HTML / Markdown / 純文字 / 剪貼簿複製
+- 閱讀客製設定：SettingsService，字級、行高、版心寬度、TOC 開關
+- 分割編輯模式：左側編輯器 + 右側即時預覽，行號同步滾動
 
-### 完整功能列表
+### 完整功能列表（v0.2.0）
 
-所有 v0.1.0 的功能均保持不變：
+| 功能 | 說明 |
+|------|------|
+| Markdown 渲染（GFM）| 標題、列表、表格、程式碼、引用、連結 |
+| 程式碼語法高亮 | highlight.js v11 |
+| XSS 防護 | sanitizeHtml()，17+ 攻擊樣本測試覆蓋 |
+| 分割編輯模式 | 左側編輯 + 右側即時預覽，行號同步 |
+| 檔案/資料夾開啟 | Tauri 原生對話框，支援 .md / .markdown / .txt |
+| 檔案樹導覽 | 側欄樹狀結構 |
+| 最近開啟 + 釘選 | 重啟後狀態保留（localStorage）|
+| 匯出 | HTML / Markdown / 純文字，剪貼簿支援 |
+| 閱讀客製 | 字級、行高、版心寬度、TOC |
+| 明亮 / 真黑暗主題 | #121212 背景，localStorage 持久化 |
+| 錯誤診斷 | E1xxx–E3xxx 錯誤碼，可理解錯誤訊息 |
 
-- **Markdown 渲染**: 完整支援 GitHub Flavored Markdown (GFM)
-- **檔案選擇**: 簡易的檔案選擇對話框，支援 `.md`、`.markdown` 和 `.txt` 檔案
-- **明暗主題切換**: 流暢的明暗模式切換
-  - 持久化主題偏好設定（儲存於 localStorage）
-  - 平滑過渡動畫
-  - 所有 UI 元素完整的主題覆蓋
-- **響應式設計**: 簡潔現代的介面
+### 隱私與安全
 
-## 📦 安裝方式
+- 本地優先設計：無雲端同步、無資料收集、無使用追蹤
+- 偏好設定僅儲存於裝置本地 localStorage
+- 詳見：[`docs/PRIVACY_POLICY.md`](docs/PRIVACY_POLICY.md)
 
-### Windows
-下載以下任一安裝程式：
-- **MSI 安裝程式**: `Markdown Reader_0.2.0_x64_zh-TW.msi` - 傳統 Windows 安裝程式
-- **NSIS 安裝程式**: `Markdown Reader_0.2.0_x64-setup.exe` - 輕量級安裝執行檔
+### 安裝方式
 
-### 系統需求
-- Windows 10 或更新版本 (x64)
-- WebView2 執行環境（通常已預裝於 Windows 10/11）
+#### Windows
 
-## 🚀 使用方式
+- MSI 安裝程式：`QuillTide Reader_0.2.0_x64_zh-TW.msi`
+- NSIS 安裝程式：`QuillTide Reader_0.2.0_x64-setup.exe`
 
-1. 啟動應用程式
-2. 點擊「開啟 Markdown 檔案」按鈕
-3. 從系統中選擇一個 Markdown 檔案
-4. 使用工具列中的主題切換按鈕（☀️/🌙）來切換明暗模式
+系統需求：Windows 10+ (x64)，WebView2 執行環境
 
-## 🛠️ 技術細節
+#### Android
 
-### 構建工具
-- **前端**: TypeScript, Vite, CSS3
-- **後端**: Rust, Tauri 2.9.5
-- **Markdown 解析器**: marked.js v12.0.0
-- **Tauri 外掛程式**:
-  - dialog（檔案選擇器）
-  - fs（檔案系統存取）
+Android 版本建置中，即將上架 Google Play。
+詳見：[`GOOGLE_PLAY_LAUNCH_CHECKLIST.md`](GOOGLE_PLAY_LAUNCH_CHECKLIST.md)
 
-## 🙏 致謝
+### 技術細節
 
-使用 ❤️ 構建：
-- [Tauri](https://tauri.app/) - 桌面應用程式框架
-- [marked](https://marked.js.org/) - Markdown 解析器
-- [Vite](https://vitejs.dev/) - 構建工具
-
-## 📝 授權
-
-這是一個開源專案。歡迎使用、修改和分發。
+- 前端：TypeScript、Vite 6、CSS3
+- 後端：Rust、Tauri 2
+- Markdown：marked v12.0.0、highlight.js v11.11.1
+- 測試：Vitest v3.2.4，73 個單元測試全數通過
+- 服務層：7 個模組（FileService、ThemeService、MarkdownService、ErrorService、ExportService、RecentFilesService、SettingsService）
 
 ---
 
-**完整變更記錄**: https://github.com/ntustRay/markdown-file-reader/compare/v0.1.0...v0.2.0
+## v0.1.0
+
+初始版本。基礎 Markdown 渲染、明暗主題、Tauri 架構建立。
+
+完整變更記錄：https://github.com/ntustRay/markdown-file-reader/compare/v0.1.0...v0.2.0

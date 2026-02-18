@@ -130,19 +130,9 @@ Refer to: `docs/GOOGLE_PLAY_DATA_SAFETY_CHECKLIST.md`
 - **Email**: (Support email)
 - **Privacy Policy URL**: https://ntustray.github.io/markdown-file-reader/PRIVACY_POLICY
 
-## Checklist Before Submission
+## Submission Checklist
 
-- [ ] App icon uploaded (512x512)
-- [ ] Feature graphic created and uploaded (1024x500)
-- [ ] At least 2 phone screenshots uploaded
-- [ ] Short description entered (80 chars max)
-- [ ] Full description entered
-- [ ] Privacy policy URL verified accessible via HTTPS
-- [ ] Data safety form completed
-- [ ] Content rating questionnaire completed
-- [ ] Target audience and content defined
-- [ ] App category selected (Productivity)
-- [ ] Contact details entered
+See the definitive launch checklist: [`../GOOGLE_PLAY_LAUNCH_CHECKLIST.md`](../GOOGLE_PLAY_LAUNCH_CHECKLIST.md)
 
 ## Asset Generation Commands (Optional)
 

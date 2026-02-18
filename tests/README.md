@@ -1,32 +1,28 @@
-# Tests Directory
+# tests/
 
-This directory contains all tests for the Markdown File Reader application.
+本目錄包含 QuillTide Reader 的所有測試。
 
-## Directory Structure
+## 目錄結構
 
 ```
 tests/
-├── setup.ts              # Test setup and global mocks
-├── unit/                 # Unit tests for individual components
-├── integration/          # Integration tests for feature workflows
-└── fixtures/             # Test fixtures (sample markdown files, etc.)
+├── setup.ts          # 全域 mock（Tauri API、localStorage）
+├── unit/             # 單元測試（73 個）
+│   ├── ThemeService.test.ts
+│   ├── FileService.test.ts
+│   ├── MarkdownService.test.ts
+│   ├── ErrorService.test.ts
+│   └── SearchFeature.test.ts
+└── fixtures/
+    └── sample.md     # 測試用 Markdown 範例
 ```
 
-## Running Tests
+## 執行測試
 
 ```bash
-# Run all tests
-npm test
-
-# Run tests with UI
-npm run test:ui
-
-# Run tests with coverage
-npm run test:coverage
+npm test              # 所有測試
+npm run test:ui       # 互動式 UI
+npm run test:coverage # 覆蓋率報告
 ```
 
-## Test Coverage Goals
-
-- Unit test coverage: > 80%
-- Integration test coverage: > 70%
-- Overall coverage: > 75%
+完整測試策略與覆蓋範圍說明見 [`docs/TESTING.md`](../docs/TESTING.md)。
