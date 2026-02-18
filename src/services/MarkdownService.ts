@@ -85,7 +85,7 @@ export class MarkdownService {
     return container.innerHTML;
   }
 
-  async extractHeadings(markdown: string): Promise<Heading[]> {
+  extractHeadings(markdown: string): Heading[] {
     const headings: Heading[] = [];
     const lines = markdown.split('\n');
 
