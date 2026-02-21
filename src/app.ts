@@ -274,10 +274,18 @@ export class App {
   private async handleEditorInput(): Promise<void> {
     this.currentContent = this.editorTextarea.value;
     this.hasUnsavedChanges = true;
-    const currentFileName = this.fileService.getCurrentFile()?.name;
-    await this.renderContent(this.currentContent, currentFileName);
     this.updateLineNumbers();
     this.updateSaveButtonState();
+    try {
+      const currentFileName = this.fileService.getCurrentFile()?.name;
+      await this.renderContent(this.currentContent, currentFileName);
+    } catch (error) {
+      if (this.isAppError(error)) {
+        this.showError(error);
+      } else {
+        this.showError(`渲染 Markdown 時發生錯誤: ${error}`);
+      }
+    }
   }
 
   private updateSaveButtonState(): void {
@@ -346,11 +354,12 @@ export class App {
     fileItem.className = `file-item recent-file-item ${isActive ? 'active' : ''}`;
 
     const relativeTime = RecentFilesService.getRelativeTime(file.lastOpened);
+    const safeName = this.escapeHtml(file.name);
 
     fileItem.innerHTML = `
       <span class="material-symbols-outlined file-icon">article</span>
       <div class="file-info">
-        <span class="file-name">${file.name}</span>
+        <span class="file-name">${safeName}</span>
         <span class="file-time">${relativeTime}</span>
       </div>
       <button class="pin-btn" title="${isPinned ? '取消釘選' : '釘選'}">
@@ -495,11 +504,13 @@ export class App {
   }
 
   private highlightMatch(text: string): string {
-    if (!this.searchQuery) return text;
+    const safeText = this.escapeHtml(text);
+
+    if (!this.searchQuery) return safeText;
 
     const escaped = this.searchQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const regex = new RegExp(`(${escaped})`, 'gi');
-    return text.replace(regex, '<mark class="search-highlight">$1</mark>');
+    return safeText.replace(regex, '<mark class="search-highlight">$1</mark>');
   }
 
   private updateLineNumbers(): void {
@@ -522,6 +533,14 @@ export class App {
     `;
   }
 
+  private escapeHtml(text: string): string {
+    return text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
   private showError(error: string | AppError): void {
     let errorHtml: string;
 
@@ -529,16 +548,16 @@ export class App {
       errorHtml = `
         <div style="padding: 24px; text-align: center;">
           <span class="material-symbols-outlined" style="font-size: 48px; color: #ef4444;">error</span>
-          <p style="color: #ef4444; margin-top: 16px; font-size: 16px;">${error}</p>
+          <p style="color: #ef4444; margin-top: 16px; font-size: 16px;">${this.escapeHtml(error)}</p>
         </div>
       `;
     } else {
       errorHtml = `
         <div style="padding: 24px; text-align: center;">
           <span class="material-symbols-outlined" style="font-size: 48px; color: #ef4444;">error</span>
-          <h3 style="color: #ef4444; margin-top: 16px;">${error.message}</h3>
-          ${error.details ? `<p style="color: var(--text-muted); margin-top: 8px; font-size: 14px;">${error.details}</p>` : ''}
-          <p style="color: var(--text-muted); margin-top: 12px; font-size: 12px;">錯誤代碼: ${error.code}</p>
+          <h3 style="color: #ef4444; margin-top: 16px;">${this.escapeHtml(error.message)}</h3>
+          ${error.details ? `<p style="color: var(--text-muted); margin-top: 8px; font-size: 14px;">${this.escapeHtml(error.details)}</p>` : ''}
+          <p style="color: var(--text-muted); margin-top: 12px; font-size: 12px;">錯誤代碼: ${this.escapeHtml(error.code)}</p>
         </div>
       `;
     }

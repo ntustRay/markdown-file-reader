@@ -9,16 +9,25 @@ export interface ExportOptions {
 }
 
 export class ExportService {
+  private escapeHtml(text: string): string {
+    return text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
   // 匯出為 HTML
   async exportToHtml(_content: string, renderedHtml: string, options: ExportOptions): Promise<string> {
     const styles = options.includeStyles ? this.getDefaultStyles() : '';
+    const title = this.escapeHtml(options.fileName || 'Exported Document');
 
     const html = `<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${options.fileName || 'Exported Document'}</title>
+  <title>${title}</title>
   ${styles ? `<style>${styles}</style>` : ''}
 </head>
 <body>

@@ -75,7 +75,9 @@ export class MarkdownService {
         }
 
         if ((name === 'href' || name === 'src') && (
-          value.startsWith('javascript:') || value.startsWith('data:text/html')
+          value.startsWith('javascript:') ||
+          value.startsWith('vbscript:') ||
+          value.startsWith('data:')
         )) {
           element.removeAttribute(attr.name);
         }

@@ -21,7 +21,8 @@ export class RecentFilesService {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
-        this.recentFiles = JSON.parse(stored);
+        const parsed = JSON.parse(stored);
+        this.recentFiles = Array.isArray(parsed) ? parsed : [];
       }
     } catch (error) {
       console.error('Error loading recent files:', error);

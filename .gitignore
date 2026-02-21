@@ -30,3 +30,5 @@ src-tauri/gen
 # Claude Code temporary files
 .claude/
 tmpclaude-*
+
+*.ralph
