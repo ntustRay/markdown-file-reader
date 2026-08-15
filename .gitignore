@@ -28,6 +28,10 @@ test-results/
 # Tauri
 src-tauri/target
 src-tauri/gen
+*.jks
+*.keystore
+keystore.properties
+key.properties
 
 # Claude Code temporary files
 .claude/

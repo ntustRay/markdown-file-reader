@@ -1,61 +1,49 @@
-# Privacy Policy — QuillTide Reader
+# Privacy Policy — Ray Markdown Reader
 
-Last updated: 2026-02-05
+Effective date: August 15, 2026
 
-QuillTide Reader is a **local-first** Markdown reader/editor.
+Ray Markdown Reader is a local Markdown and plain-text reader and editor published by ntustRay.
 
-## Summary
-- We do **not** provide cloud sync.
-- We do **not** provide collaborative editing.
-- File content is processed locally on your device for reading/editing.
+## Data collection and sharing
 
-## What data we process
+Ray Markdown Reader does not collect, transmit, sell, or share personal data. It has no accounts, advertising, analytics, telemetry, cloud synchronization, crash-upload service, or developer-operated server.
 
-### 1) File content you open
-- Purpose: render Markdown/plain text, support editing and saving.
-- Location: local device only.
-- Sharing: not shared with us.
+## Files and documents
 
-### 2) App preferences
-- Example: theme preference (`light` / `dark`) stored in localStorage.
-- Purpose: preserve user UI preference.
-- Sharing: not shared with us.
+The app can access a file only after you select it with the Android system document picker. The selected file is read and processed locally so the app can display and edit it. If you choose Save, the app writes changes back to that same file. File contents are not sent to ntustRay or to a third party by the app.
 
-### 3) Basic operational logs
-- Purpose: diagnose local runtime errors.
-- Content: technical error messages only.
-- Sharing: not automatically uploaded to us.
+The app does not request broad storage, photos, videos, or media access.
 
-## Permissions and access
-- File/folder access is initiated by user action (open file/open folder).
-- Access is used only for requested local operations.
+## Local preferences
 
-## Data retention
-- Since data is stored locally, retention depends on your local files and app storage.
-- You can remove data by deleting local files or clearing app storage.
+If you manually choose a light or dark theme, that preference is stored in the app's local storage on your device. It is not transmitted. You can remove it by clearing the app's storage or uninstalling the app.
 
-## Children’s privacy
-- This app is not specifically directed to children under 13.
+## External links
 
-## Third-party services
-- The app runtime includes open-source libraries (e.g., Tauri, marked, highlight.js).
-- No first-party cloud analytics or sync endpoint is built into the current version.
+When you choose an HTTP or HTTPS link in a document, Ray Markdown Reader asks Android to open it in your default browser. The app does not load the destination itself. Your browser and the destination website handle any subsequent data according to their own privacy policies.
 
-## Security note
-- Markdown output is sanitized in-app to reduce script/unsafe HTML execution risk.
+## Retention and deletion
+
+ntustRay retains no app user data because the app does not transmit data to ntustRay. You control your documents through their storage provider. Clearing app storage removes the local theme preference; uninstalling the app removes its private local data.
+
+## Children
+
+Ray Markdown Reader is intended for users aged 18 and over and is not designed for children.
+
+## Security
+
+Raw HTML in Markdown is displayed as source text instead of being executed. Images are not loaded in the app. Only HTTP and HTTPS links can be handed to the external browser.
+
+## Changes
+
+Material changes to this policy will be published at the same public URL with a revised effective date.
 
 ## Contact
-If you have privacy questions, open an issue in this repository.
 
-## Public policy URL (for store listing)
+Privacy and support questions: ntustray.opensource@gmail.com
 
-**GitHub Pages URL (recommended):**
-```
-https://ntustray.github.io/markdown-file-reader/PRIVACY_POLICY
-```
+Developer: ntustRay
 
-To enable:
-1. Go to repository Settings → Pages
-2. Set Source to "Deploy from a branch" → `master` (or `main`) → `/docs` folder
-3. Save and wait for deployment
-4. Use the above URL in Google Play Console
+## Google Play publication
+
+Before production submission, publish this exact policy on a stable, publicly reachable HTTPS page and enter that URL in Google Play Console. The repository copy is the source text, not proof that a Pages deployment is live.

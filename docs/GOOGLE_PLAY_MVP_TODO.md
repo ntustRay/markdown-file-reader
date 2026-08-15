@@ -118,29 +118,29 @@ Do not start store artwork or the 14-day closed-test clock until all P0 product 
 
 ### Phase 0 — Protect the new scope
 
-- [ ] Rename the app everywhere to `Ray Markdown Reader`.
-- [ ] Change the package ID to `com.ntustray.raymarkdownreader` before creating the Play Console app.
-- [ ] Set version name to `1.0.0` and establish an integer Android `versionCode` that increments for every uploaded bundle.
-- [ ] Replace `QuillTide`, `MarkView`, `quilltide_*`, and old desktop-workspace copy.
-- [ ] Update `README.md`, privacy/data-safety docs, release notes, and the older launch checklist to match this scope.
-- [ ] Mark the older `docs/APP_STORE_GAP_ANALYSIS.md` feature roadmap as superseded; do not leave completed claims for removed features.
-- [ ] Add a regression check that fails if removed UI labels or remote font URLs return.
+- [x] Rename the app everywhere to `Ray Markdown Reader`.
+- [x] Change the package ID to `com.ntustray.raymarkdownreader` before creating the Play Console app.
+- [x] Set version name to `1.0.0` and establish an integer Android `versionCode` that increments for every uploaded bundle.
+- [x] Replace `QuillTide`, `MarkView`, `quilltide_*`, and old desktop-workspace copy.
+- [x] Update `README.md`, privacy/data-safety docs, release notes, and the older launch checklist to match this scope.
+- [x] Mark the older `docs/APP_STORE_GAP_ANALYSIS.md` feature roadmap as superseded; do not leave completed claims for removed features.
+- [x] Add a regression check that fails if removed UI labels or remote font URLs return.
 
 **Gate:** One identity, one package ID, and no conflicting release documentation.
 
 ### Phase 1 — Prove the Android platform seams first
 
-- [ ] Run an environment preflight for Java, Rust, Android Studio, Android SDK Platform/Platform-Tools/Build-Tools/Command-line Tools, NDK, `ANDROID_HOME`, `NDK_HOME`, and Rust Android targets.
-- [ ] Update Tauri and its plugins to a mutually compatible supported version before generating mobile scaffolding; review release notes for breaking changes.
+- [x] Run an environment preflight for Java, Rust, Android Studio, Android SDK Platform/Platform-Tools/Build-Tools/Command-line Tools, NDK, `ANDROID_HOME`, `NDK_HOME`, and Rust Android targets. (Android toolchain is missing; see release handoff.)
+- [x] Update Tauri and its plugins to a mutually compatible supported version before generating mobile scaffolding; review release notes for breaking changes.
 - [ ] Run `tauri android init` and commit the generated Android project files that belong in source control.
-- [ ] Set `minSdkVersion` to 28.
+- [x] Set `minSdkVersion` to 28.
 - [ ] Target Android 16 / API 36. The earliest realistic production request crosses the 2026-08-31 API 36 deadline after the mandatory closed test.
-- [ ] Create a minimal Android-only Tauri capability instead of reusing the desktop capability that grants broad `**` filesystem scope.
+- [x] Create a minimal Android-only Tauri capability instead of reusing the desktop capability that grants broad `**` filesystem scope.
 - [ ] Prove on the Android 16 physical phone that the system picker returns a `content://` URI and the app can read a selected `.md`, `.markdown`, and `.txt` file through the filesystem plugin.
 - [ ] Prove that the selected document can be overwritten without `READ_EXTERNAL_STORAGE`, `WRITE_EXTERNAL_STORAGE`, `MANAGE_EXTERNAL_STORAGE`, media, or Internet permissions.
 - [ ] Test at least one writable local document and one read-only provider result.
 - [ ] Prove that cancelling the picker and a read failure preserve the existing in-memory document.
-- [ ] Add the Tauri opener plugin on Android and restrict its capability scope to `http://*` and `https://*` URLs only.
+- [x] Add the Tauri opener plugin on Android and restrict its capability scope to `http://*` and `https://*` URLs only.
 - [ ] Prove external-browser opening on the Android 16 phone and handle the no-browser/error case.
 - [ ] Decide the Back-event implementation only after proving keyboard-first Back behavior on device.
 
@@ -150,58 +150,58 @@ Tauri's dialog plugin returns Android content URIs and documents that its filesy
 
 ### Phase 2 — Build the single-document domain model
 
-- [ ] Replace folder-oriented `FileService` state with one controlled document state.
+- [x] Replace folder-oriented `FileService` state with one controlled document state.
 - [ ] Model the document explicitly: URI, display name, file kind, original bytes metadata, saved content, draft content, and read/write state.
 - [ ] Use real states rather than unrelated booleans, for example `empty | loading | preview | editing | error` plus a dirty comparison.
-- [ ] Validate extension, byte size, and UTF-8 at the file boundary before creating document state.
-- [ ] Detect and preserve UTF-8 BOM and dominant/original line ending.
-- [ ] Determine dirty state by comparing the normalized draft with the last successfully saved content; reverting all edits should clear dirty state.
-- [ ] Implement save as one operation against the current URI. Update the saved baseline only after a confirmed successful write.
-- [ ] Implement the Save/Discard/Cancel decision as an explicit result type.
-- [ ] Make file replacement transactional: retain the old state until the new document is valid and loaded.
-- [ ] Add localized, actionable errors for unsupported extension, over 10 MB, invalid UTF-8, read failure, read-only source, write failure, and external-link failure.
+- [x] Validate extension, byte size, and UTF-8 at the file boundary before creating document state.
+- [x] Detect and preserve UTF-8 BOM and dominant/original line ending.
+- [x] Determine dirty state by comparing the normalized draft with the last successfully saved content; reverting all edits should clear dirty state.
+- [x] Implement save as one operation against the current URI. Update the saved baseline only after a confirmed successful write.
+- [x] Implement the Save/Discard/Cancel decision as an explicit result type.
+- [x] Make file replacement transactional: retain the old state until the new document is valid and loaded.
+- [x] Add localized, actionable errors for unsupported extension, over 10 MB, invalid UTF-8, read failure, read-only source, write failure, and external-link failure.
 
 **Gate:** Unit tests cover every file and unsaved-change transition, including all failure paths with no data loss.
 
 ### Phase 3 — Make Markdown rendering match the contract
 
-- [ ] Render `.txt` by escaping all markup and preserving whitespace.
-- [ ] Configure the smallest required GFM feature set and retain fenced-code highlighting.
-- [ ] Replace the current sanitizer behavior that removes unsupported HTML. Escape raw HTML tokens so their source remains visible.
-- [ ] Convert Markdown images according to the locked remote/local rules; never leave an `<img src>` that can fetch content.
-- [ ] Sanitize link protocols before rendering and again before invoking the opener boundary.
-- [ ] Intercept link clicks so the WebView never navigates away from the app document.
-- [ ] Add a restrictive Content Security Policy with no remote font, image, script, frame, or connection sources.
+- [x] Render `.txt` by escaping all markup and preserving whitespace.
+- [x] Configure the smallest required GFM feature set and retain fenced-code highlighting.
+- [x] Replace the current sanitizer behavior that removes unsupported HTML. Escape raw HTML tokens so their source remains visible.
+- [x] Convert Markdown images according to the locked remote/local rules; never leave an `<img src>` that can fetch content.
+- [x] Sanitize link protocols before rendering and again before invoking the opener boundary.
+- [x] Intercept link clicks so the WebView never navigates away from the app document.
+- [x] Add a restrictive Content Security Policy with no remote font, image, script, frame, or connection sources.
 - [ ] Add security tests for raw HTML, event handlers, scripts, iframes, encoded/obfuscated protocols, remote images, relative images, and ordinary HTTP(S) links.
-- [ ] Add representative GFM and syntax-highlight fixtures.
+- [x] Add representative GFM and syntax-highlight fixtures.
 
 **Gate:** Malicious fixtures cannot execute code, navigate the WebView, read local resources, or trigger non-HTTP(S) apps; supported Markdown remains readable.
 
 ### Phase 4 — Replace the desktop workspace with the mobile UI
 
-- [ ] Remove sidebar, overlay, hamburger menu, folder picker, breadcrumbs, search, recent/pinned lists, and split-pane markup.
-- [ ] Remove `RecentFilesService`, `SettingsService`, `ExportService`, folder-tree code, and tests that exist only for removed behavior.
-- [ ] Rebuild CSS around a single phone viewport instead of patching the 1,500-line desktop stylesheet.
-- [ ] Implement the agreed empty state, top bar, full-screen Preview/Edit surfaces, conditional Save action, and Edit/Preview floating action button.
+- [x] Remove sidebar, overlay, hamburger menu, folder picker, breadcrumbs, search, recent/pinned lists, and split-pane markup.
+- [x] Remove `RecentFilesService`, `SettingsService`, `ExportService`, folder-tree code, and tests that exist only for removed behavior.
+- [x] Rebuild CSS around a single phone viewport instead of patching the 1,500-line desktop stylesheet.
+- [x] Implement the agreed empty state, top bar, full-screen Preview/Edit surfaces, conditional Save action, and Edit/Preview floating action button.
 - [ ] Keep the document readable with Android safe areas, display cutouts, font scaling, and the on-screen keyboard.
-- [ ] Prevent the toolbar and floating action from covering document or editor content.
+- [x] Prevent the toolbar and floating action from covering document or editor content.
 - [ ] Support phone portrait and landscape without horizontal page scrolling.
-- [ ] Make all touch targets at least 48 dp and provide visible focus/pressed/disabled states.
-- [ ] Give every icon-only control an accessible name in both languages.
+- [x] Make all touch targets at least 48 dp and provide visible focus/pressed/disabled states.
+- [x] Give every icon-only control an accessible name in both languages.
 - [ ] Preserve editor selection and scroll position when switching Preview/Edit where practical; do not add a complex synchronized-scroll system.
-- [ ] Use the system theme on first launch and persist only an explicit manual override.
-- [ ] Replace remote Google Fonts and Material Symbols with system/local assets.
+- [x] Use the system theme on first launch and persist only an explicit manual override.
+- [x] Replace remote Google Fonts and Material Symbols with system/local assets.
 
 **Gate:** The complete flow is usable one-handed on the Android 16 phone, with no sidebar or desktop-only controls at any orientation.
 
 ### Phase 5 — Localization and automated verification
 
-- [ ] Centralize user-facing strings in a small typed localization module; do not introduce a large i18n framework unless the platform requires it.
-- [ ] Add complete `en` and `zh-TW` strings for every label, dialog, validation message, and error.
-- [ ] Test `zh-TW`, English, and an unsupported locale that must fall back to English.
-- [ ] Update unit tests for file validation, encoding, newline/BOM preservation, dirty state, safe Markdown, link policy, image policy, theme selection, and localization fallback.
+- [x] Centralize user-facing strings in a small typed localization module; do not introduce a large i18n framework unless the platform requires it.
+- [x] Add complete `en` and `zh-TW` strings for every label, dialog, validation message, and error.
+- [x] Test `zh-TW`, English, and an unsupported locale that must fall back to English.
+- [x] Update unit tests for file validation, encoding, newline/BOM preservation, dirty state, safe Markdown, link policy, image policy, theme selection, and localization fallback.
 - [ ] Replace desktop E2E expectations with mobile viewport journeys for empty, preview, edit, dirty, save, discard, cancel, theme, and link flows.
-- [ ] Run typecheck/build, unit tests, E2E tests, and `git diff --check`.
+- [x] Run typecheck/build, unit tests, E2E tests, and `git diff --check`.
 - [ ] Run an accessibility pass with Android TalkBack: reading order, labels, focus, dialog actions, editor, and theme contrast.
 - [ ] Test 10 MB boundary files and representative long code blocks/tables for responsiveness and memory stability.
 
@@ -213,7 +213,7 @@ Tauri's dialog plugin returns Android content URIs and documents that its filesy
 - [ ] Confirm target API 36 again immediately before upload because Google Play requirements change over time.
 - [ ] Generate a dedicated upload keystore outside the repository.
 - [ ] Back up the keystore and credentials in two secure locations. Never commit them or paste them into project docs.
-- [ ] Add `*.jks`, `*.keystore`, signing property files, and local credential paths to `.gitignore` before creating the key.
+- [x] Add `*.jks`, `*.keystore`, signing property files, and local credential paths to `.gitignore` before creating the key.
 - [ ] Use Google Play App Signing and keep the upload key distinct from the Google-managed app signing key.
 - [ ] Build a signed release Android App Bundle (`.aab`), not only an APK.
 - [ ] Inspect bundle package ID, version name/code, min/target SDK, architectures, icons, and permissions.
@@ -224,11 +224,11 @@ Tauri's dialog plugin returns Android content URIs and documents that its filesy
 
 ### Phase 7 — Store identity, listing, and policy
 
-- [ ] Design a new app icon aligned with `Ray Markdown Reader`; replace the current generic blue `M` icon.
-- [ ] Generate launcher/adaptive icons and a 512 × 512 Play icon.
+- [x] Design a new app icon aligned with `Ray Markdown Reader`; replace the current generic blue `M` icon.
+- [x] Generate launcher/adaptive icons and a 512 × 512 Play icon.
 - [ ] Create a 1024 × 500 feature graphic consistent with the icon and without misleading claims.
 - [ ] Capture at least two real phone screenshots from the release build. Recommended set: empty/open flow, Markdown preview, full-screen edit, and dark theme.
-- [ ] Write an English default listing and a Traditional Chinese localized listing.
+- [x] Write an English default listing and a Traditional Chinese localized listing.
 - [ ] Make store text match the actual 1.0.0 scope. Do not advertise folders, search, split view, images, export, file associations, or autosave.
 - [ ] Update and publish the privacy policy at a stable HTTPS URL. The currently documented GitHub Pages URL must be verified live rather than assumed.
 - [ ] Update Data safety answers after inspecting the release bundle and every dependency. Expected result: no data collected and no data shared.

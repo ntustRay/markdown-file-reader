@@ -1,146 +1,96 @@
-# Google Play Store Listing Assets — QuillTide Reader
+# Google Play Listing — Ray Markdown Reader 1.0.0
 
-Last updated: 2026-02-05
+## Identity
 
-## App Identity
+- App name: `Ray Markdown Reader`
+- Package ID: `com.ntustray.raymarkdownreader`
+- Category: Productivity
+- Developer: ntustRay
+- Support: ntustray.opensource@gmail.com
+- Price: Free
+- Ads: No
+- Target audience: Ages 18 and over; not designed for children
 
-- **App Name**: QuillTide Reader
-- **Package Name**: com.quilltide.reader
-- **Category**: Productivity
-- **Content Rating**: Everyone
+## English listing (default)
 
-## Required Graphics
+### App name
 
-### App Icon
-- **Format**: PNG (32-bit with alpha)
-- **Size**: 512 x 512 px
-- **Location**: `app-icon.png` (already exists)
-- **Requirements**:
-  - No transparency on edges
-  - Consistent with in-app icon
+`Ray Markdown Reader`
 
-### Feature Graphic
-- **Format**: PNG or JPEG
-- **Size**: 1024 x 500 px
-- **Location**: `assets/feature-graphic.png` (to be created)
-- **Design Guidelines**:
-  - Clean, minimal design
-  - Show app name and tagline
-  - Suggested tagline: "Local-first Markdown, zero cloud lock-in"
+### Short description
 
-### Screenshots (Required: 2-8)
-- **Format**: PNG or JPEG
-- **Sizes**:
-  - Phone: 1080 x 1920 px (9:16) or 1080 x 2400 px
-  - Tablet 7": 1200 x 1920 px (optional)
-  - Tablet 10": 1920 x 1200 px (optional)
-- **Location**: `assets/screenshots/`
-- **Suggested Screenshots**:
-  1. Welcome screen with sidebar
-  2. Markdown file opened with syntax highlighting
-  3. Edit mode (split view)
-  4. Dark mode view
-  5. File tree navigation
-  6. Search functionality
+`Open, read, edit, and save one local Markdown or text file.`
 
-## Store Listing Text
+### Full description
 
-### Short Description (80 characters max)
-```
-離線優先的 Markdown 閱讀器，無雲端、無追蹤，完全掌控您的文件。
-```
+Ray Markdown Reader keeps local documents simple.
 
-**English Alternative:**
-```
-Offline-first Markdown reader. No cloud, no tracking. Your files, your control.
-```
+Choose one Markdown or plain-text file from your Android device, read it in a clean full-screen view, switch to editing when needed, and save changes back to the same file.
 
-### Full Description (4000 characters max)
+Features:
 
-```
-QuillTide Reader 是一款專為重視隱私的使用者打造的 Markdown 閱讀與編輯工具。
+- Markdown preview with GitHub-Flavored Markdown and code highlighting
+- Full-screen Preview and Edit modes
+- `.md`, `.markdown`, and `.txt` support
+- Light and dark themes
+- English and Traditional Chinese interface
+- HTTP and HTTPS links open in your device browser
+- No accounts, ads, analytics, tracking, or cloud sync
+- No broad storage or media permission
 
-【本地優先設計】
-• 所有檔案僅在您的裝置上處理
-• 無雲端同步、無資料上傳
-• 無使用行為追蹤或分析
-• 完全離線可用
+Ray Markdown Reader opens one file at a time and does not restore previously opened files. Images are shown as references rather than loaded inside the app.
 
-【核心功能】
-• 完整支援 GitHub Flavored Markdown (GFM)
-• 程式碼語法高亮
-• 即時預覽的分割編輯模式
-• 資料夾瀏覽與檔案樹導覽
-• 快速搜尋檔案
-• 明暗主題切換
+### What's new
 
-【安全與隱私】
-• 內建 HTML 內容過濾，防止惡意腳本執行
-• 不收集任何個人資料
-• 詳細的隱私政策公開透明
+`First release: open, preview, edit, and save local Markdown and text files.`
 
-【支援格式】
-• .md (Markdown)
-• .markdown
-• .txt (純文字)
+## Traditional Chinese listing
 
-【適合誰使用？】
-• 軟體開發者閱讀技術文件
-• 筆記愛好者整理本地筆記
-• 重視隱私的使用者
-• 需要離線工作的專業人士
+### App name
 
----
-QuillTide Reader - 您的本地 Markdown 工作站
-```
+`Ray Markdown Reader`
 
-### What's New (Release Notes)
-```
-v0.2.0
-• 完整繁體中文介面
-• 本地優先設計：無雲端、無追蹤
-• 強化安全性：HTML 內容過濾
-• 改進的錯誤處理與診斷
-```
+### Short description
 
-## Content Rating Questionnaire
+`開啟、閱讀、編輯並儲存一個本機 Markdown 或文字檔。`
 
-Based on the app's functionality:
+### Full description
 
-| Question | Answer |
-|----------|--------|
-| Violence | No |
-| Sexual Content | No |
-| Language | No |
-| Controlled Substances | No |
-| User-Generated Content | No (app doesn't share content) |
-| Sharing of Location | No |
-| In-App Purchases | No |
-| Ads | No |
+Ray Markdown Reader 讓本機文件保持簡單。
 
-**Expected Rating**: Everyone (E)
+從 Android 裝置選擇一個 Markdown 或純文字檔，以乾淨的全畫面模式閱讀，需要修改時切換到編輯，並將變更儲存回原檔案。
 
-## Privacy & Data Safety
+功能：
 
-Refer to: `docs/GOOGLE_PLAY_DATA_SAFETY_CHECKLIST.md`
+- 支援 GitHub-Flavored Markdown 與程式碼語法高亮
+- 全畫面「預覽」與「編輯」切換
+- 支援 `.md`、`.markdown` 與 `.txt`
+- 明亮與深色主題
+- 英文與繁體中文介面
+- HTTP 與 HTTPS 連結交由裝置瀏覽器開啟
+- 無帳號、廣告、分析、追蹤或雲端同步
+- 不要求廣泛儲存空間或媒體權限
 
-## Contact Information
+Ray Markdown Reader 一次只開啟一個檔案，也不會在下次啟動時重開先前文件。圖片只顯示為參照，不會在 app 內載入。
 
-- **Developer Name**: (Your name or organization)
-- **Email**: (Support email)
-- **Privacy Policy URL**: https://ntustray.github.io/markdown-file-reader/PRIVACY_POLICY
+### 最新消息
 
-## Submission Checklist
+`第一個版本：開啟、預覽、編輯並儲存本機 Markdown 與文字檔。`
 
-See the definitive launch checklist: [`../GOOGLE_PLAY_LAUNCH_CHECKLIST.md`](../GOOGLE_PLAY_LAUNCH_CHECKLIST.md)
+## Graphics
 
-## Asset Generation Commands (Optional)
+- Icon master: `assets/store/ray-markdown-reader-icon-master.png` (1254 × 1254 source generated with the built-in image tool)
+- Play icon: `assets/store/play-icon-512.png`
+- Feature graphic: 1024 × 500 PNG or JPEG; create after physical-device UI acceptance.
+- Phone screenshots: capture at least two from the Play-delivered release. Recommended: Markdown preview, editor with file name and Save, and dark theme.
 
-If using ImageMagick to resize icons:
-```bash
-# Generate feature graphic placeholder
-convert -size 1024x500 xc:#1a1a2e \
-  -fill white -gravity center -pointsize 72 \
-  -annotate 0 "QuillTide Reader" \
-  assets/feature-graphic.png
-```
+Do not show or claim folders, a sidebar, tabs, search, split view, exports, inline images, file association, autosave, or cloud features.
+
+## Manual Console declarations
+
+- Ads: No
+- App access: All functionality is available without login
+- Target audience: 18+
+- Data safety: use `GOOGLE_PLAY_DATA_SAFETY_CHECKLIST.md`
+- Content rating: answer the live IARC questionnaire from actual behavior; do not assume a rating in advance
+- Countries/regions: all available, as previously agreed

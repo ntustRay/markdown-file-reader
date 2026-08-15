@@ -1,95 +1,58 @@
-# QuillTide Reader
+# Ray Markdown Reader
 
-**離線優先的 Markdown 閱讀器與編輯器**
+A focused Android app for opening, reading, editing, and saving one local Markdown or plain-text file.
 
-> Local-first Markdown, zero cloud lock-in.
+## Version 1.0.0
 
-## 功能簡介
+- Opens one `.md`, `.markdown`, or `.txt` file with the Android system picker
+- Shows Markdown in a full-screen preview and `.txt` as unformatted text
+- Switches the whole screen between Preview and Edit
+- Saves changes back to the same selected file
+- Prompts to Save, Discard, or Cancel before replacing or leaving a changed document
+- Supports English and Traditional Chinese
+- Follows the system theme until the user chooses a persistent light or dark theme
+- Opens only HTTP(S) links in the device browser
+- Works without accounts, ads, analytics, cloud services, or broad storage access
 
-- **完整 Markdown 渲染**：支援 GitHub Flavored Markdown (GFM)、程式碼語法高亮
-- **分割編輯模式**：左側編輯、右側即時預覽
-- **檔案管理**：開啟檔案/資料夾、檔案樹導覽、最近開啟 + 釘選
-- **匯出功能**：支援 HTML、Markdown、純文字匯出
-- **主題**：明亮模式 / 真黑暗模式（#121212）
-- **閱讀客製**：字級、行高、版心寬度
-- **安全性**：HTML 內容過濾，防止 XSS
-- **本地優先**：無雲端同步、無資料收集、無追蹤
+The app intentionally has no folders, sidebar, tabs, recent files, search, split view, export, inline images, or draft recovery.
 
-## 技術架構
+## Development
 
-| 層級 | 技術 |
-|------|------|
-| 前端 | TypeScript、Vite、CSS3 |
-| 後端 | Rust、Tauri 2 |
-| Markdown | marked v12、highlight.js v11 |
-| 測試 | Vitest v3.2.4、Playwright |
+Use Node.js 24 and the current Rust stable toolchain.
 
-## 快速開始
-
-```bash
-# 安裝依賴
-npm install
-
-# 開發模式
-npm run tauri:dev
-
-# 執行測試
-npm test
-
-# 建置桌面版
-npm run tauri:build
-
-# 建置 Android 版（需先完成 Android SDK 設定）
-npx tauri android build --target aarch64 --release
+```powershell
+npm.cmd install
+npm.cmd test -- --run
+npm.cmd run test:e2e
+npm.cmd run build
+cd src-tauri
+cargo check
 ```
 
-## 專案結構
+Android builds additionally require Android Studio, Java, Android SDK Platform 36, SDK Platform-Tools, SDK Build-Tools, Android SDK Command-line Tools, NDK, and the Rust Android targets. See [Google Play release handoff](docs/GOOGLE_PLAY_RELEASE_HANDOFF.md).
 
-```
-├── src/                        # TypeScript 前端
-│   ├── app.ts                  # 主應用程式
-│   ├── main.ts                 # 入口點
-│   ├── styles.css              # 全域樣式
-│   └── services/               # 服務層（7 個模組）
-│       ├── FileService.ts
-│       ├── ThemeService.ts
-│       ├── MarkdownService.ts
-│       ├── ErrorService.ts
-│       ├── ExportService.ts
-│       ├── RecentFilesService.ts
-│       └── SettingsService.ts
-├── src-tauri/                  # Rust / Tauri 後端
-│   ├── src/
-│   ├── icons/android/          # Android 各密度 icon
-│   └── tauri.conf.json
-├── tests/                      # 測試套件（73 個單元測試）
-├── docs/                       # 所有文件
-└── GOOGLE_PLAY_LAUNCH_CHECKLIST.md
-```
+## Release identity
 
-## 文件索引
+| Field | Value |
+| --- | --- |
+| App name | Ray Markdown Reader |
+| Package ID | `com.ntustray.raymarkdownreader` |
+| Version | `1.0.0` / version code `1000000` |
+| Minimum Android | Android 9 / API 28 |
+| Target Android | Android 16 / API 36 |
+| Category | Productivity |
+| Developer | ntustRay |
+| Support | ntustray.opensource@gmail.com |
 
-| 文件 | 說明 |
-|------|------|
-| [`docs/IMPLEMENTATION_SUMMARY.md`](docs/IMPLEMENTATION_SUMMARY.md) | 實作總結、架構說明 |
-| [`docs/TESTING.md`](docs/TESTING.md) | 測試策略與覆蓋範圍 |
-| [`docs/APP_STORE_GAP_ANALYSIS.md`](docs/APP_STORE_GAP_ANALYSIS.md) | Google Play 缺口分析（C01–C10）|
-| [`docs/STORE_LISTING_ASSETS.md`](docs/STORE_LISTING_ASSETS.md) | 商店素材規格與文案 |
-| [`docs/PRIVACY_POLICY.md`](docs/PRIVACY_POLICY.md) | 隱私政策 |
-| [`docs/GOOGLE_PLAY_DATA_SAFETY_CHECKLIST.md`](docs/GOOGLE_PLAY_DATA_SAFETY_CHECKLIST.md) | Data Safety 填表答案 |
-| [`GOOGLE_PLAY_LAUNCH_CHECKLIST.md`](GOOGLE_PLAY_LAUNCH_CHECKLIST.md) | 上架待辦 Checklist |
-| [`RELEASE_NOTES.md`](RELEASE_NOTES.md) | 版本更新說明 |
+## Product and release documents
 
-## App 資訊
+- [MVP scope and TODO](docs/GOOGLE_PLAY_MVP_TODO.md)
+- [Google Play release handoff](docs/GOOGLE_PLAY_RELEASE_HANDOFF.md)
+- [Store listing copy](docs/STORE_LISTING_ASSETS.md)
+- [Privacy policy](docs/PRIVACY_POLICY.md)
+- [Data safety answers](docs/GOOGLE_PLAY_DATA_SAFETY_CHECKLIST.md)
+- [Testing](docs/TESTING.md)
 
-| 欄位 | 值 |
-|------|----|
-| 應用程式名稱 | QuillTide Reader |
-| Package | com.quilltide.reader |
-| 版本 | 0.2.0 |
-| 最低 Android 版本 | 7.0（API 24） |
-| 類別 | Productivity |
+## Privacy
 
-## 授權
-
-開源專案，歡迎使用、修改與分發。
+Files stay on the device and are accessed only after the user selects them. Ray Markdown Reader does not collect or share user data. See the [privacy policy](docs/PRIVACY_POLICY.md).

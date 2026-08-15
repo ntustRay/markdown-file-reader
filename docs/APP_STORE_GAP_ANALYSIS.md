@@ -1,5 +1,7 @@
 # Google Play 上架前：缺口分析與 Checklist Plan — QuillTide Reader
 
+> **Superseded:** This February 2026 workspace-style roadmap describes removed features and the former QuillTide identity. It is retained only as history. Use `GOOGLE_PLAY_MVP_TODO.md` and `GOOGLE_PLAY_RELEASE_HANDOFF.md` for Ray Markdown Reader 1.0.0.
+
 > 最後更新：2026-02-05
 > 產品策略約束：**目前不做「雲端同步」與「多人共編」**。
 

@@ -1,43 +1,33 @@
-# Google Play Data Safety Checklist — QuillTide Reader
+# Google Play Data Safety — Ray Markdown Reader 1.0.0
 
-Last updated: 2026-02-05
+Last reviewed: August 15, 2026
 
-> Goal: keep this checklist aligned with `docs/PRIVACY_POLICY.md` and the real app behavior.
+These are the expected Play Console answers for the current source. Reconfirm them against the final signed AAB and merged Android manifest before submission.
 
-## Product posture
-- Local-first app
-- No cloud sync
-- No collaborative editing
+## Expected answers
 
-## Data collection/sharing declaration baseline
+- Does the app collect or share any required user data types? **No**
+- Is all user data encrypted in transit? **Not applicable; the app transmits no user data**
+- Can users request deletion? **Not applicable; the developer receives and retains no user data**
+- Does the app provide account creation? **No**
+- Does the app contain ads? **No**
 
-### Data collected by app developer
-- Personal info: **No**
-- Financial info: **No**
-- Health and fitness: **No**
-- Messages: **No**
-- Photos and videos: **No**
-- Audio files: **No**
-- Files and docs: **Processed locally only** (user-selected files), **not collected by developer**
-- App activity analytics: **No first-party cloud analytics**
-- Device or other IDs: **No**
+Files and documents selected through Android's system picker are processed locally and are not collected by the developer. The locally stored theme choice is also not collected.
 
-### Data shared with third parties
-- Shared data: **No**
+Opening an HTTP(S) link hands the URL to a separate browser app. Ray Markdown Reader does not make the network request. Do not describe the browser's independent processing as data collected by Ray Markdown Reader.
 
-## Security practices statement
-- Data in transit: N/A for local-only core flow
-- Account creation required: No
-- Users can request data deletion: N/A for cloud account data; users control local deletion
+## Required final evidence
 
-## Console submission checklist
-- [ ] Privacy policy URL is publicly reachable via HTTPS (GitHub Pages not yet enabled — see `docs/PRIVACY_POLICY.md` for setup steps)
-- [ ] Play Console Data safety answers match this file (manual step in Google Play Console)
-- [x] Policy text matches latest app behavior (verified 2026-02-05)
-- [x] Release notes mention local-first/no-cloud posture (added to RELEASE_NOTES.md)
+- [ ] Inspect the final merged manifest and confirm no Internet, broad storage, media, advertising ID, analytics, camera, microphone, contacts, or location permission.
+- [ ] Inspect all release dependencies and confirm no analytics, ads, crash upload, or network SDK was added.
+- [ ] Confirm the release behavior matches [the privacy policy](PRIVACY_POLICY.md).
+- [ ] Confirm the public privacy-policy HTTPS URL works without login or download.
+- [ ] Enter the answers in Play Console and save a dated screenshot for release records.
 
-## Evidence links (repo)
-- Privacy policy: `docs/PRIVACY_POLICY.md`
-- Theme local storage: `src/services/ThemeService.ts`
-- Local file open/save: `src/services/FileService.ts`
-- Markdown sanitization: `src/services/MarkdownService.ts`
+## Source evidence
+
+- File picker and same-file save: `src/services/FileService.ts`
+- Local theme preference: `src/services/ThemeService.ts`
+- URL allowlist and external browser boundary: `src/services/ExternalLinkService.ts`
+- Raw HTML and image policy: `src/services/MarkdownService.ts`
+- Android capabilities: `src-tauri/capabilities/default.json`

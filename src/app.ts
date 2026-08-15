@@ -1,4 +1,5 @@
 import { getCurrentWindow } from '@tauri-apps/api/window';
+import { isTauri } from '@tauri-apps/api/core';
 import { DocumentError, hasUnsavedChanges, type DocumentFile } from './domain/Document';
 import { createTranslator, resolveLocale, type Translations } from './localization';
 import { openExternalUrl } from './services/ExternalLinkService';
@@ -58,7 +59,9 @@ export class App {
     this.updateThemeControl(this.themeService.getCurrentTheme());
     this.bindEvents();
     this.updateView();
-    void this.bindWindowClose();
+    if (isTauri()) {
+      void this.bindWindowClose();
+    }
   }
 
   private bindEvents(): void {

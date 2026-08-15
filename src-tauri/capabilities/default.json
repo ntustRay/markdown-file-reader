@@ -1,33 +1,21 @@
 {
-  "$schema": "../gen/schemas/desktop-schema.json",
+  "$schema": "../gen/schemas/mobile-schema.json",
   "identifier": "default",
-  "description": "Default permissions for the application",
-  "windows": ["*"],
+  "description": "Minimum permissions for the Android document workflow",
+  "windows": ["main"],
   "permissions": [
     "core:default",
     "dialog:allow-open",
-    "dialog:default",
-    {
-      "identifier": "fs:allow-read-text-file",
-      "allow": [
-        { "path": "**" }
-      ]
-    },
-    {
-      "identifier": "fs:allow-write-text-file",
-      "allow": [
-        { "path": "**" }
-      ]
-    },
-    {
-      "identifier": "fs:allow-read-dir",
-      "allow": [
-        { "path": "**" }
-      ]
-    },
+    "fs:allow-stat",
     "fs:allow-read-file",
     "fs:allow-write-file",
-    "fs:default"
+    {
+      "identifier": "opener:allow-open-url",
+      "allow": [
+        { "url": "http://*" },
+        { "url": "https://*" }
+      ]
+    }
   ],
-  "platforms": ["windows", "linux", "macOS"]
+  "platforms": ["android"]
 }

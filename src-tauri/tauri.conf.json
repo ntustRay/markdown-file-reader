@@ -1,7 +1,7 @@
 {
-  "productName": "QuillTide Reader",
-  "version": "0.2.0",
-  "identifier": "com.quilltide.reader",
+  "productName": "Ray Markdown Reader",
+  "version": "1.0.0",
+  "identifier": "com.ntustray.raymarkdownreader",
   "build": {
     "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:1420",
@@ -9,20 +9,20 @@
     "frontendDist": "../dist"
   },
   "app": {
-    "withGlobalTauri": true,
+    "withGlobalTauri": false,
     "windows": [
       {
-        "title": "QuillTide Reader",
-        "width": 1200,
-        "height": 800,
-        "minWidth": 800,
-        "minHeight": 600,
-        "resizable": true,
+        "title": "Ray Markdown Reader",
+        "width": 412,
+        "height": 915,
+        "minWidth": 280,
+        "minHeight": 480,
+        "resizable": false,
         "fullscreen": false
       }
     ],
     "security": {
-      "csp": null
+      "csp": "default-src 'self'; connect-src ipc: http://ipc.localhost; img-src 'self' asset: http://asset.localhost; style-src 'self' 'unsafe-inline'; script-src 'self'"
     }
   },
   "bundle": {
@@ -36,11 +36,12 @@
       "icons/icon.ico"
     ],
     "android": {
-      "minSdkVersion": 24
+      "minSdkVersion": 28,
+      "versionCode": 1000000
     },
     "category": "Productivity",
-    "shortDescription": "Offline Markdown Reader & Editor",
-    "longDescription": "QuillTide Reader is a local-first Markdown reader and editor with dark mode, split editing, and folder-based file management. No cloud sync or collaborative editing for now."
+    "shortDescription": "Open, read, edit, and save one local Markdown file.",
+    "longDescription": "Ray Markdown Reader is a focused, offline-first Markdown and plain-text reader and editor for Android. Open one local file, switch between full-screen preview and editing, and save changes back to the same file."
   },
   "plugins": {}
 }
