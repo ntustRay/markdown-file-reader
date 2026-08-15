@@ -2,11 +2,6 @@ import { marked } from 'marked';
 import { markedHighlight } from 'marked-highlight';
 import hljs from 'highlight.js';
 
-export interface Heading {
-  level: number;
-  text: string;
-}
-
 export class MarkdownService {
   private static configured = false;
 
@@ -26,6 +21,26 @@ export class MarkdownService {
           return hljs.highlight(code, { language }).value;
         }
       }));
+      marked.use({
+        renderer: {
+          html(html) {
+            return escapeHtml(html);
+          },
+          image(href, _title, text) {
+            const label = escapeHtml(text || href);
+            if (!isSafeExternalUrl(href)) {
+              return `<span class="image-reference">${label}</span>`;
+            }
+            return `<a class="image-reference image-reference-link" href="${escapeHtml(href)}" data-external-link rel="noopener noreferrer">${label}</a>`;
+          },
+          link(href, _title, text) {
+            if (!isSafeExternalUrl(href)) {
+              return text;
+            }
+            return `<a href="${escapeHtml(href)}" data-external-link rel="noopener noreferrer">${text}</a>`;
+          },
+        },
+      });
 
       MarkdownService.configured = true;
     }
@@ -57,21 +72,23 @@ export class MarkdownService {
 
     const blockedTags = [
       'script', 'iframe', 'object', 'embed', 'form',
-      'input', 'button', 'textarea', 'select', 'style', 'link', 'meta'
+      'button', 'textarea', 'select', 'style', 'link', 'meta'
     ];
 
-    blockedTags.forEach((tag) => {
-      container.querySelectorAll(tag).forEach((element) => element.remove());
-    });
+    for (const tag of blockedTags) {
+      for (const element of container.querySelectorAll(tag)) {
+        element.remove();
+      }
+    }
 
-    container.querySelectorAll('*').forEach((element) => {
-      Array.from(element.attributes).forEach((attr) => {
+    for (const element of container.querySelectorAll('*')) {
+      for (const attr of Array.from(element.attributes)) {
         const name = attr.name.toLowerCase();
         const value = attr.value.trim().toLowerCase();
 
         if (name.startsWith('on')) {
           element.removeAttribute(attr.name);
-          return;
+          continue;
         }
 
         if ((name === 'href' || name === 'src') && (
@@ -81,25 +98,27 @@ export class MarkdownService {
         )) {
           element.removeAttribute(attr.name);
         }
-      });
-    });
-
-    return container.innerHTML;
-  }
-
-  extractHeadings(markdown: string): Heading[] {
-    const headings: Heading[] = [];
-    const lines = markdown.split('\n');
-
-    for (const line of lines) {
-      const match = line.match(/^(#{1,6})\s+(.+)$/);
-      if (match) {
-        const level = match[1].length;
-        const text = match[2].trim();
-        headings.push({ level, text });
       }
     }
 
-    return headings;
+    return container.innerHTML;
+  }
+}
+
+function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function isSafeExternalUrl(value: string): boolean {
+  try {
+    const url = new URL(value);
+    return url.protocol === 'https:' || url.protocol === 'http:';
+  } catch {
+    return false;
   }
 }

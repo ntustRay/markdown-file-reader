@@ -1,122 +1,59 @@
-<!DOCTYPE html>
-<html lang="zh-TW">
+<!doctype html>
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>QuillTide Reader - Markdown 閱讀器</title>
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-    <!-- Material Symbols -->
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#f7f9fc" />
+    <title>Ray Markdown Reader</title>
   </head>
   <body>
-    <div id="app">
-      <!-- Sidebar Overlay for Mobile -->
-      <div id="sidebar-overlay" class="sidebar-overlay"></div>
-
-      <!-- Sidebar -->
-      <aside id="sidebar" class="sidebar">
-        <!-- Branding -->
-        <div class="sidebar-header">
-          <div class="sidebar-brand">
-            <span class="material-symbols-outlined">description</span>
-            <h1>QuillTide</h1>
-          </div>
-          <p class="sidebar-version">v0.2.0 • Local Workspace</p>
+    <div id="app" class="app-shell">
+      <header class="app-bar">
+        <button id="open-file" class="icon-button" type="button" aria-label="Open file">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H10l2 2h5.5A2.5 2.5 0 0 1 20 7.5V9h-2V7.5a.5.5 0 0 0-.5-.5h-6.33l-2-2H6.5a.5.5 0 0 0-.5.5V18l3.2-7H22l-4.25 9H6.5A2.5 2.5 0 0 1 4 17.5v-12ZM8.45 18h8.03l2.36-5H10.73l-2.28 5Z"/></svg>
+        </button>
+        <div class="document-identity">
+          <span id="app-name" class="app-name">Ray Markdown Reader</span>
+          <span id="file-name" class="file-name">No file</span>
         </div>
+        <button id="save-file" class="text-button" type="button" hidden>Save</button>
+        <button id="theme-toggle" class="icon-button" type="button" aria-label="Use dark theme">
+          <svg class="theme-light-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 17.5A5.5 5.5 0 1 1 12 6a5.5 5.5 0 0 1 0 11.5Zm0-2a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7ZM11 1h2v3h-2V1Zm0 19h2v3h-2v-3ZM1 11h3v2H1v-2Zm19 0h3v2h-3v-2ZM4.22 5.64 5.64 4.22l2.12 2.12-1.42 1.42-2.12-2.12Zm12.02 12.02 1.42-1.42 2.12 2.12-1.42 1.42-2.12-2.12Zm2.12-13.44 1.42 1.42-2.12 2.12-1.42-1.42 2.12-2.12ZM6.34 16.24l1.42 1.42-2.12 2.12-1.42-1.42 2.12-2.12Z"/></svg>
+          <svg class="theme-dark-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M20.2 15.7A8.5 8.5 0 0 1 8.3 3.8 9 9 0 1 0 20.2 15.7ZM5 12a7 7 0 0 1 2-4.9A10.5 10.5 0 0 0 16.9 17 7 7 0 0 1 5 12Z"/></svg>
+        </button>
+      </header>
 
-        <!-- Search -->
-        <div class="sidebar-search">
-          <div class="search-wrapper">
-            <span class="material-symbols-outlined search-icon">search</span>
-            <input type="text" id="search-input" class="search-input" placeholder="Quick Find..." />
-            <span class="search-shortcut">⌘K</span>
-          </div>
-        </div>
+      <main id="workspace" class="workspace">
+        <section id="empty-state" class="empty-state">
+          <div class="document-mark" aria-hidden="true">M<span>↓</span></div>
+          <h1 id="empty-title">Open a Markdown file</h1>
+          <p id="empty-hint">Choose one .md, .markdown, or .txt file from your device.</p>
+          <button id="empty-open-file" class="primary-button" type="button">Open file</button>
+        </section>
 
-        <!-- Pinned Files -->
-        <nav id="pinned-list" class="file-list pinned-list">
-          <div class="file-section-header" id="pinned-header" style="display: none;">
-            <span class="material-symbols-outlined section-icon">push_pin</span>
-            <span>釘選</span>
-          </div>
-        </nav>
-
-        <!-- File List / Recent Files -->
-        <nav id="file-list" class="file-list">
-          <div class="file-section-header" id="recent-header">
-            <span class="material-symbols-outlined section-icon">schedule</span>
-            <span>最近開啟</span>
-            <span class="material-symbols-outlined expand-icon">expand_more</span>
-          </div>
-        </nav>
-
-        <!-- Sidebar Footer -->
-        <div class="sidebar-footer">
-          <button id="open-folder" class="btn-primary">
-            <span class="material-symbols-outlined">folder_open</span>
-            <span>開啟資料夾</span>
-          </button>
-          <button id="open-file" class="btn-secondary">
-            <span class="material-symbols-outlined">insert_drive_file</span>
-            <span>開啟檔案</span>
-          </button>
-        </div>
-      </aside>
-
-      <!-- Main Content Area -->
-      <main class="main-content">
-        <!-- Top Navigation / Header -->
-        <header class="toolbar">
-          <!-- Mobile Menu Toggle -->
-          <button id="menu-toggle" class="menu-toggle" title="開啟選單">
-            <span class="material-symbols-outlined">menu</span>
-          </button>
-
-          <!-- Breadcrumbs -->
-          <div class="breadcrumbs">
-            <span class="breadcrumb-item">Docs</span>
-            <span class="breadcrumb-separator">/</span>
-            <span id="file-name" class="breadcrumb-current">歡迎</span>
-          </div>
-
-          <!-- Actions -->
-          <div class="toolbar-actions">
-            <button id="save-file" class="btn-ghost" title="儲存檔案" style="display: none;">
-              <span class="material-symbols-outlined">save</span>
-              <span>儲存</span>
-            </button>
-            <button id="edit-mode-toggle" class="btn-ghost" title="切換編輯模式">
-              <span class="material-symbols-outlined">edit</span>
-              <span>編輯</span>
-            </button>
-            <div class="toolbar-divider"></div>
-            <button id="theme-toggle" class="btn-icon" title="切換主題">
-              <span class="material-symbols-outlined theme-icon">light_mode</span>
-            </button>
-          </div>
-        </header>
-
-        <!-- Content Area (Reader/Editor) -->
-        <div id="content-wrapper" class="content-wrapper">
-          <!-- Preview/Reader Mode -->
-          <div id="preview-pane" class="preview-pane">
-            <div class="markdown-canvas">
-              <div id="content" class="markdown-body"></div>
-            </div>
-          </div>
-
-          <!-- Editor Mode (Hidden by default) -->
-          <div id="editor-pane" class="editor-pane" style="display: none;">
-            <div class="editor-wrapper">
-              <div class="editor-gutter" id="editor-gutter"></div>
-              <textarea id="editor-textarea" class="editor-textarea" spellcheck="false"></textarea>
-            </div>
-          </div>
-        </div>
+        <article id="preview-pane" class="document-pane markdown-body" hidden></article>
+        <textarea id="editor-textarea" class="editor-textarea" aria-label="Document editor" spellcheck="false" hidden></textarea>
       </main>
+
+      <button id="mode-toggle" class="mode-toggle" type="button" aria-label="Edit" hidden>
+        <svg class="edit-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m4 16.25-.75 4.5 4.5-.75L19.8 7.95l-3.75-3.75L4 16.25Zm3 1.85-1.3.22.22-1.3 10.13-10.12 1.08 1.05L7 18.1ZM19.45 2.45a2 2 0 0 0-2.83 0l-.57.57 3.75 3.75.57-.57a2 2 0 0 0 0-2.83l-.92-.92Z"/></svg>
+        <svg class="preview-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 5c5.5 0 9.5 5.5 9.5 7s-4 7-9.5 7S2.5 13.5 2.5 12 6.5 5 12 5Zm0 2c-3.7 0-6.5 3.4-7.4 5 .9 1.6 3.7 5 7.4 5s6.5-3.4 7.4-5C18.5 10.4 15.7 7 12 7Zm0 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm0 2a1 1 0 1 0 0 2 1 1 0 0 0 0-2Z"/></svg>
+        <span id="mode-label">Edit</span>
+      </button>
+
+      <div id="notice" class="notice" role="status" aria-live="polite" hidden></div>
+
+      <dialog id="unsaved-dialog" class="confirm-dialog">
+        <form method="dialog">
+          <h2 id="unsaved-title">Save your changes?</h2>
+          <p id="unsaved-message">This file has changes that have not been saved.</p>
+          <div class="dialog-actions">
+            <button id="cancel-discard" value="cancel" type="submit">Cancel</button>
+            <button id="confirm-discard" value="discard" type="submit">Discard</button>
+            <button id="confirm-save" class="primary-button" value="save" type="submit">Save</button>
+          </div>
+        </form>
+      </dialog>
     </div>
     <script type="module" src="/src/main.ts"></script>
   </body>

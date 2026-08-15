@@ -1,211 +1,98 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { FileService } from '../../src/services/FileService';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { open } from '@tauri-apps/plugin-dialog';
-import { readTextFile, writeTextFile, readDir } from '@tauri-apps/plugin-fs';
+import { readFile, size, writeFile } from '@tauri-apps/plugin-fs';
+import { hasUnsavedChanges } from '../../src/domain/Document';
+import { FileService } from '../../src/services/FileService';
 
 vi.mock('@tauri-apps/plugin-dialog');
 vi.mock('@tauri-apps/plugin-fs');
 
 describe('FileService', () => {
-  let fileService: FileService;
-
   beforeEach(() => {
     vi.clearAllMocks();
-    fileService = new FileService();
   });
 
-  describe('openFile', () => {
-    it('應該成功開啟並讀取檔案', async () => {
-      const mockPath = 'C:\\test\\file.md';
-      const mockContent = '# Test Content';
+  it('keeps the current document when the system picker is cancelled', async () => {
+    const service = new FileService();
+    vi.mocked(open).mockResolvedValue(null);
 
-      vi.mocked(open).mockResolvedValue(mockPath);
-      vi.mocked(readTextFile).mockResolvedValue(mockContent);
-
-      const result = await fileService.openFile();
-
-      expect(open).toHaveBeenCalledWith({
-        multiple: false,
-        filters: [{
-          name: 'Markdown',
-          extensions: ['md', 'markdown', 'txt']
-        }]
-      });
-
-      expect(result).toEqual({
-        path: 'C:/test/file.md', // Normalized to forward slashes
-        content: mockContent,
-        name: 'file.md'
-      });
-    });
-
-    it('應該在使用者取消時返回 null', async () => {
-      vi.mocked(open).mockResolvedValue(null);
-
-      const result = await fileService.openFile();
-
-      expect(result).toBeNull();
-    });
-
-    it('應該處理檔案讀取錯誤', async () => {
-      const mockPath = 'C:\\test\\file.md';
-      vi.mocked(open).mockResolvedValue(mockPath);
-      vi.mocked(readTextFile).mockRejectedValue(new Error('Read error'));
-
-      await expect(fileService.openFile()).rejects.toMatchObject({
-        code: 'E1002',
-        message: '讀取檔案時發生錯誤',
-      });
-    });
+    await expect(service.openDocument()).resolves.toBeNull();
+    expect(service.getCurrentDocument()).toBeNull();
   });
 
-  describe('getCurrentFile', () => {
-    it('應該在沒有開啟檔案時返回 null', () => {
-      expect(fileService.getCurrentFile()).toBeNull();
+  it('opens an Android content URI as the current document', async () => {
+    const service = new FileService();
+    const bytes = new TextEncoder().encode('# Guide');
+    const uri = 'content://provider/document/primary%3ADownload%2Fguide.md';
+    vi.mocked(open).mockResolvedValue(uri);
+    vi.mocked(size).mockResolvedValue(bytes.byteLength);
+    vi.mocked(readFile).mockResolvedValue(bytes);
+
+    const document = await service.openDocument();
+
+    expect(document).toMatchObject({
+      uri,
+      name: 'guide.md',
+      kind: 'markdown',
+      draftContent: '# Guide',
     });
-
-    it('應該返回當前開啟的檔案', async () => {
-      const mockPath = 'C:\\test\\file.md';
-      const mockContent = '# Test';
-
-      vi.mocked(open).mockResolvedValue(mockPath);
-      vi.mocked(readTextFile).mockResolvedValue(mockContent);
-
-      await fileService.openFile();
-
-      const currentFile = fileService.getCurrentFile();
-      expect(currentFile).toEqual({
-        path: 'C:/test/file.md', // Normalized to forward slashes
-        content: mockContent,
-        name: 'file.md'
-      });
-    });
+    expect(service.getCurrentDocument()).toBe(document);
   });
 
-  describe('getFileName', () => {
-    it('應該從完整路徑提取檔案名稱 (Windows)', () => {
-      const path = 'C:\\Users\\Test\\Documents\\file.md';
-      const name = fileService['getFileName'](path);
-      expect(name).toBe('file.md');
+  it('keeps the current document when a replacement cannot be decoded', async () => {
+    const service = new FileService();
+    const firstUri = 'content://provider/first.md';
+    const brokenUri = 'content://provider/broken.md';
+    vi.mocked(open)
+      .mockResolvedValueOnce(firstUri)
+      .mockResolvedValueOnce(brokenUri);
+    vi.mocked(size).mockResolvedValue(16);
+    vi.mocked(readFile)
+      .mockResolvedValueOnce(new TextEncoder().encode('# First'))
+      .mockResolvedValueOnce(new Uint8Array([0xc3, 0x28]));
+
+    const first = await service.openDocument();
+    await expect(service.openDocument()).rejects.toMatchObject({
+      code: 'invalid-utf8',
     });
 
-    it('應該從完整路徑提取檔案名稱 (Unix)', () => {
-      const path = '/home/user/documents/file.md';
-      const name = fileService['getFileName'](path);
-      expect(name).toBe('file.md');
-    });
-
-    it('應該處理沒有路徑的檔案名稱', () => {
-      const path = 'file.md';
-      const name = fileService['getFileName'](path);
-      expect(name).toBe('file.md');
-    });
+    expect(service.getCurrentDocument()).toBe(first);
   });
 
-  describe('事件監聽', () => {
-    it('應該在檔案開啟時觸發回調', async () => {
-      const callback = vi.fn();
-      fileService.onFileOpen(callback);
+  it('writes the draft to the same URI and marks it saved after success', async () => {
+    const service = new FileService();
+    const uri = 'content://provider/guide.md';
+    vi.mocked(open).mockResolvedValue(uri);
+    vi.mocked(size).mockResolvedValue(8);
+    vi.mocked(readFile).mockResolvedValue(new TextEncoder().encode('# First'));
+    vi.mocked(writeFile).mockResolvedValue(undefined);
+    await service.openDocument();
 
-      const mockPath = 'C:\\test\\file.md';
-      const mockContent = '# Test';
+    service.updateDraft('# Changed');
+    const saved = await service.saveDocument();
 
-      vi.mocked(open).mockResolvedValue(mockPath);
-      vi.mocked(readTextFile).mockResolvedValue(mockContent);
-
-      await fileService.openFile();
-
-      expect(callback).toHaveBeenCalledWith({
-        path: 'C:/test/file.md', // Normalized to forward slashes
-        content: mockContent,
-        name: 'file.md'
-      });
-    });
+    expect(writeFile).toHaveBeenCalledWith(
+      uri,
+      new TextEncoder().encode('# Changed'),
+    );
+    expect(hasUnsavedChanges(saved)).toBe(false);
+    expect(service.getCurrentDocument()).toBe(saved);
   });
 
-  describe('openFolder', () => {
-    it('應該成功開啟資料夾並建立檔案樹', async () => {
-      const mockFolderPath = 'C:\\test\\folder';
-      const mockEntries = [
-        { name: 'subfolder', isDirectory: true },
-        { name: 'file1.md', isDirectory: false },
-        { name: 'file2.markdown', isDirectory: false },
-        { name: 'image.png', isDirectory: false },
-      ];
-      const mockSubEntries = [
-        { name: 'file3.txt', isDirectory: false },
-      ];
+  it('keeps the draft dirty when writing fails', async () => {
+    const service = new FileService();
+    vi.mocked(open).mockResolvedValue('content://provider/read-only.md');
+    vi.mocked(size).mockResolvedValue(8);
+    vi.mocked(readFile).mockResolvedValue(new TextEncoder().encode('# First'));
+    vi.mocked(writeFile).mockRejectedValue(new Error('Read only'));
+    await service.openDocument();
+    service.updateDraft('# Unsaved');
 
-      vi.mocked(open).mockResolvedValue(mockFolderPath);
-      // Mock for buildFileTree (2 calls) and collectMarkdownFiles (2 calls)
-      vi.mocked(readDir)
-        .mockResolvedValueOnce(mockEntries as any)  // First buildFileTree
-        .mockResolvedValueOnce(mockSubEntries as any)  // buildFileTree subfolder
-        .mockResolvedValueOnce(mockEntries as any)  // First collectMarkdownFiles
-        .mockResolvedValueOnce(mockSubEntries as any); // collectMarkdownFiles subfolder
-      vi.mocked(readTextFile).mockResolvedValue('# Content');
+    await expect(service.saveDocument()).rejects.toThrow('Read only');
 
-      const result = await fileService.openFolder();
-
-      expect(result).toHaveLength(3); // file1.md, file2.markdown, file3.txt
-      const tree = fileService.getFileTree();
-      expect(tree.length).toBeGreaterThan(0);
-    });
-
-    it('應該在使用者取消時返回 null', async () => {
-      vi.mocked(open).mockResolvedValue(null);
-
-      const result = await fileService.openFolder();
-
-      expect(result).toBeNull();
-    });
-
-    it('應該遞迴讀取子資料夾中的檔案', async () => {
-      const mockFolderPath = 'C:\\test\\folder';
-      const mockEntries = [
-        { name: 'subfolder', isDirectory: true },
-      ];
-      const mockSubEntries = [
-        { name: 'nested.md', isDirectory: false },
-      ];
-
-      vi.mocked(open).mockResolvedValue(mockFolderPath);
-      // Mock for buildFileTree and collectMarkdownFiles
-      vi.mocked(readDir)
-        .mockResolvedValueOnce(mockEntries as any)  // buildFileTree root
-        .mockResolvedValueOnce(mockSubEntries as any)  // buildFileTree subfolder
-        .mockResolvedValueOnce(mockEntries as any)  // collectMarkdownFiles root
-        .mockResolvedValueOnce(mockSubEntries as any); // collectMarkdownFiles subfolder
-      vi.mocked(readTextFile).mockResolvedValue('# Nested Content');
-
-      await fileService.openFolder();
-
-      const files = fileService.getFolderFiles();
-      expect(files).toHaveLength(1);
-      expect(files[0].name).toBe('nested.md');
-    });
-  });
-
-  describe('saveFile', () => {
-    it('應該儲存檔案內容', async () => {
-      const mockPath = 'C:\\test\\file.md';
-      const mockContent = '# Test';
-      const newContent = '# Updated';
-
-      vi.mocked(open).mockResolvedValue(mockPath);
-      vi.mocked(readTextFile).mockResolvedValue(mockContent);
-
-      await fileService.openFile();
-      await fileService.saveFile(newContent);
-
-      expect(writeTextFile).toHaveBeenCalledWith('C:/test/file.md', newContent); // Normalized to forward slashes
-    });
-
-    it('應該在沒有開啟檔案時拋出錯誤', async () => {
-      await expect(fileService.saveFile('content')).rejects.toMatchObject({
-        code: 'E1003',
-        message: '儲存檔案時發生錯誤',
-      });
-    });
+    const current = service.getCurrentDocument();
+    expect(current).not.toBeNull();
+    expect(current && hasUnsavedChanges(current)).toBe(true);
+    expect(current?.draftContent).toBe('# Unsaved');
   });
 });
