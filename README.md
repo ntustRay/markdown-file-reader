@@ -47,6 +47,7 @@ Android builds additionally require Android Studio, Java, Android SDK Platform 3
 ## Product and release documents
 
 - [MVP scope and TODO](docs/GOOGLE_PLAY_MVP_TODO.md)
+- [Traditional Chinese manual Google Play TODO](docs/MANUAL_GOOGLE_PLAY_TODO.zh-TW.md)
 - [Google Play release handoff](docs/GOOGLE_PLAY_RELEASE_HANDOFF.md)
 - [Store listing copy](docs/STORE_LISTING_ASSETS.md)
 - [Privacy policy](docs/PRIVACY_POLICY.md)
