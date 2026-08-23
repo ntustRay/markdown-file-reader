@@ -6,6 +6,7 @@
   "permissions": [
     "core:default",
     "core:window:allow-destroy",
+    "android-content:default",
     "dialog:allow-open",
     "fs:allow-stat",
     "fs:allow-read-file",

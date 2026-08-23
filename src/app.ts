@@ -58,6 +58,8 @@ export class App {
     this.applyTranslations();
     this.updateThemeControl(this.themeService.getCurrentTheme());
     this.bindEvents();
+    this.openFileButton.hidden = false;
+    this.emptyOpenFileButton.hidden = false;
     this.updateView();
     if (isTauri()) {
       void this.bindWindowClose();

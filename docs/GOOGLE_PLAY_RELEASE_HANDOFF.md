@@ -47,7 +47,6 @@ Verify both English and Traditional Chinese, light and dark themes, portrait and
 - Confirm Back closes the keyboard first, then shows the unsaved-change prompt.
 - Confirm HTTP(S) links and remote-image references open in the external browser.
 - Confirm relative/local images are not actionable and no images load in the app.
-- Run TalkBack through the complete flow.
 
 ## 4. Create and protect the upload key
 
