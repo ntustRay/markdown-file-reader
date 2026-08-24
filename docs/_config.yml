@@ -1,3 +1,12 @@
 title: Ray Markdown Reader
 description: Privacy policy and support information for Ray Markdown Reader.
-theme: minima
+exclude:
+  - APP_STORE_GAP_ANALYSIS.md
+  - GOOGLE_PLAY_DATA_SAFETY_CHECKLIST.md
+  - GOOGLE_PLAY_MVP_TODO.md
+  - GOOGLE_PLAY_RELEASE_HANDOFF.md
+  - IMPLEMENTATION_SUMMARY.md
+  - MANUAL_GOOGLE_PLAY_TODO.zh-TW.md
+  - NEXT_SESSION.md
+  - STORE_LISTING_ASSETS.md
+  - TESTING.md
