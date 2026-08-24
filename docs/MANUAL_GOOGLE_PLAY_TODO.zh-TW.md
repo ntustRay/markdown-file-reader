@@ -20,7 +20,8 @@
 ## 3. 保管簽章資料
 
 完成：
-- [ ] upload keystore 已備份，Google Play App Signing 已啟用。
+- [x] upload keystore 已建立本機備份，Google Play App Signing 已啟用。
+- [ ] keystore 與密碼仍需分開備份到另一個裝置或雲端。
 
 步驟：
 1. 在 repository 外建立 upload keystore。
@@ -29,6 +30,7 @@
 ## 4. 填寫商店資料
 
 完成：
+- [x] 隱私權政策已公開，網址免登入可開啟。
 - [ ] Play Console 的商店資訊與政策欄位都沒有未完成項目。
 
 步驟：
@@ -39,7 +41,8 @@
 ## 5. 上傳並測試 AAB
 
 完成：
-- [ ] Play 派送版本通過 smoke test，pre-launch report 沒有阻擋問題。
+- [x] Signed AAB 已上傳，Play 派送版本已通過 smoke test。
+- [ ] pre-launch report 沒有阻擋問題。
 
 步驟：
 1. 請 Codex 產生並檢查 signed AAB，再親自上傳到 Internal testing。
