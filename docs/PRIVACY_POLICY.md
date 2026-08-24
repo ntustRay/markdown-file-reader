@@ -1,3 +1,8 @@
+---
+title: Privacy Policy
+permalink: /privacy-policy/
+---
+
 # Privacy Policy — Ray Markdown Reader
 
 Effective date: August 15, 2026
