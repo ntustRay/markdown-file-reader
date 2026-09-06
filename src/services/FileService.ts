@@ -4,7 +4,6 @@ import { invoke } from '@tauri-apps/api/core';
 import {
   decodeDocument,
   DocumentError,
-  markDocumentSaved,
   serializeDocument,
   type DocumentFile,
   MAX_DOCUMENT_BYTES,
@@ -13,6 +12,7 @@ import {
 
 export class FileService {
   private currentDocument: DocumentFile | null = null;
+  private documentGeneration = 0;
 
   async openDocument(): Promise<DocumentFile | null> {
     const selected = isAndroidRuntime()
@@ -45,6 +45,7 @@ export class FileService {
       bytes,
     });
     this.currentDocument = document;
+    this.documentGeneration += 1;
     return document;
   }
 
@@ -66,13 +67,21 @@ export class FileService {
       throw new Error('No document is open.');
     }
 
-    const bytes = serializeDocument(this.currentDocument);
-    if (isAndroidContentUri(this.currentDocument.uri)) {
-      await writeAndroidContentUri(this.currentDocument.uri, bytes);
+    const document = this.currentDocument;
+    const generation = this.documentGeneration;
+    const bytes = serializeDocument(document);
+    if (isAndroidContentUri(document.uri)) {
+      await writeAndroidContentUri(document.uri, bytes);
     } else {
-      await writeFile(this.currentDocument.uri, bytes);
+      await writeFile(document.uri, bytes);
     }
-    this.currentDocument = markDocumentSaved(this.currentDocument);
+    if (generation !== this.documentGeneration) {
+      return { ...document, savedContent: document.draftContent };
+    }
+    this.currentDocument = {
+      ...this.currentDocument,
+      savedContent: document.draftContent,
+    };
     return this.currentDocument;
   }
 }
@@ -200,6 +209,5 @@ function encodeBase64(bytes: Uint8Array): string {
 }
 
 function getDocumentName(uri: string): string {
-  const decodedUri = decodeURIComponent(uri);
-  return decodedUri.split(/[\\/]/).pop() ?? decodedUri;
+  return uri.split(/[\\/]/).pop() ?? uri;
 }

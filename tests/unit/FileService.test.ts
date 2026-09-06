@@ -10,8 +10,52 @@ vi.mock('@tauri-apps/plugin-fs');
 vi.mock('@tauri-apps/api/core');
 
 describe('FileService', () => {
+  it.each(['100% complete.md', 'literal%20name.md', 'literal%2Fname.txt'])(
+    'preserves the literal local filename %s', async (name) => {
+      vi.mocked(open).mockResolvedValue(`C:/notes/${name}`);
+      vi.mocked(size).mockResolvedValue(3);
+      vi.mocked(readFile).mockResolvedValue(new TextEncoder().encode('old'));
+      await expect(new FileService().openDocument()).resolves.toMatchObject({ name });
+    },
+  );
+
+  it.each([false, true])('preserves edits during a pending save (Android URI: %s)', async (android) => {
+    const service = new FileService();
+    vi.mocked(open).mockResolvedValue(android ? 'content://provider/test.md' : 'C:/notes/test.md');
+    vi.mocked(size).mockResolvedValue(3);
+    vi.mocked(readFile).mockResolvedValue(new TextEncoder().encode('old'));
+    vi.mocked(invoke).mockResolvedValueOnce(androidContentResponse('test.md', new TextEncoder().encode('old')));
+    await service.openDocument();
+    service.updateDraft('first edit');
+    let finishWrite: () => void = () => undefined;
+    const pendingWrite = new Promise<void>(resolve => { finishWrite = resolve; });
+    if (android) vi.mocked(invoke).mockReturnValueOnce(pendingWrite);
+    else vi.mocked(writeFile).mockReturnValueOnce(pendingWrite);
+    const pendingSave = service.saveDocument();
+    service.updateDraft('second edit');
+    finishWrite();
+    await pendingSave;
+    expect(service.getCurrentDocument()).toMatchObject({ savedContent: 'first edit', draftContent: 'second edit' });
+  });
+
+  it('does not mark a reopened document saved when an earlier write finishes', async () => {
+    const service = new FileService();
+    vi.mocked(open).mockResolvedValue('C:/notes/test.md');
+    vi.mocked(size).mockResolvedValue(3);
+    vi.mocked(readFile).mockResolvedValue(new TextEncoder().encode('old'));
+    await service.openDocument();
+    service.updateDraft('first edit');
+    let finishWrite: () => void = () => undefined;
+    vi.mocked(writeFile).mockReturnValueOnce(new Promise<void>(resolve => { finishWrite = resolve; }));
+    const pendingSave = service.saveDocument();
+    const reopened = await service.openDocument();
+    finishWrite();
+    await pendingSave;
+    expect(service.getCurrentDocument()).toBe(reopened);
+  });
+
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.resetAllMocks();
   });
 
   afterEach(() => {

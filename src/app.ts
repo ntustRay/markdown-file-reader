@@ -32,6 +32,7 @@ export class App {
   private readonly t = createTranslator(resolveLocale(navigator.language));
   private mode: ViewMode = 'preview';
   private isClosing = false;
+  private isSaving = false;
 
   private readonly appName = requiredElement('app-name', HTMLSpanElement);
   private readonly fileName = requiredElement('file-name', HTMLSpanElement);
@@ -96,6 +97,7 @@ export class App {
   }
 
   private async openFile(): Promise<void> {
+    if (this.isSaving) return;
     const current = this.fileService.getCurrentDocument();
     if (current !== null && hasUnsavedChanges(current)) {
       const decision = await this.confirmUnsavedChanges();
@@ -122,19 +124,23 @@ export class App {
   }
 
   private async saveFile(): Promise<boolean> {
+    if (this.isSaving) return false;
     if (this.fileService.getCurrentDocument() === null) {
       return false;
     }
+    this.isSaving = true;
     this.saveButton.disabled = true;
     this.saveButton.textContent = this.t('saving');
     try {
       await this.fileService.saveDocument();
-      this.updateDocumentControls();
-      return true;
+      const current = this.fileService.getCurrentDocument();
+      return current !== null && !hasUnsavedChanges(current);
     } catch {
       this.showNotice(this.t('writeFailed'));
-      this.updateDocumentControls();
       return false;
+    } finally {
+      this.isSaving = false;
+      this.updateDocumentControls();
     }
   }
 
@@ -178,6 +184,7 @@ export class App {
   }
 
   private async resolveCloseRequest(): Promise<void> {
+    if (this.isSaving) return;
     const decision = await this.confirmUnsavedChanges();
     if (decision === 'cancel') {
       return;
@@ -223,8 +230,8 @@ export class App {
     }
     const isDirty = hasUnsavedChanges(current);
     this.fileName.textContent = isDirty ? `${current.name} •` : current.name;
-    this.saveButton.textContent = this.t('save');
-    this.saveButton.disabled = !isDirty;
+    this.saveButton.textContent = this.t(this.isSaving ? 'saving' : 'save');
+    this.saveButton.disabled = this.isSaving || !isDirty;
   }
 
   private updateThemeControl(theme: Theme): void {
