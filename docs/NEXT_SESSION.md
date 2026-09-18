@@ -15,10 +15,24 @@ Updated: 2026-09-18
 - Android release lint: 0 errors, 35 warnings, 1 hint. Remaining warnings concern
   generated resources/icons, dependency update suggestions and generated Kotlin.
   Plugin Gradle unit-test task reports NO-SOURCE (not a native runtime test).
-- Playwright uses a mocked Android bridge. No ADB device or emulator was available;
-  the new system picker still requires real-device smoke testing.
+- Playwright uses a mocked Android bridge. Separate real-device QA is now complete
+  on CPH2651 / Android 16, using package `com.ntustray.raymarkdownreader.qa` with
+  release Rust libraries and a debug-signed Android wrapper. The Play-installed
+  `com.ntustray.raymarkdownreader` remains untouched at version 1.0.0.
+- Real-device testing exposed an intermittent picker-cancel hang: the native result
+  returned during the Activity callback could remain queued until another IPC.
+  Posting result handling to the decor-view queue fixed it. Null-payload changes
+  and async Rust bridging did not fix the repro and were reverted; no debug logs remain.
+- Final QA passed 3 New-picker cancellations and 3 Open-picker cancellations, real
+  create/save/reopen with exact Chinese and emoji content, Markdown rendering,
+  duplicate-name creation (`Untitled (2).md`, without changing `Untitled.md`),
+  dirty Cancel, Save-before-New, Discard-then-picker-cancel, and Escape after Discard.
+  Repro: `powershell -NoProfile -ExecutionPolicy Bypass -File tests/android/picker-cancel.ps1`.
+  Test files remain in phone `Download/RayMarkdownReaderTest`; QA is left in preview.
+- The single-worker Playwright rerun exited successfully with 12 passed. The earlier
+  parallel run finished its 12 cases but hung in teardown and was interrupted.
 - Unsigned AAB: `src-tauri/target/RayMarkdownReader-1.1.0-unsigned.aab`
-  - SHA-256: `C9500DD9789F83B8334B4D538AA7D0CF26AB22B292A16C1079D8E10EE1787619`
+  - SHA-256: `44C2E290F321E820CC5D5B5F0E7028FF45355D2B6DD3D614C2737A0BDCB2B372`
   - Package `com.ntustray.raymarkdownreader`, version `1.1.0` / `1001000`,
     min SDK 28, target SDK 36, ARM64 + ARMv7, no new Android permissions.
 - Signing is blocked: upload keystore exists, but signing passwords are not in
@@ -40,8 +54,9 @@ Updated: 2026-09-18
 2. Verify signing certificate against the existing Play upload certificate. Never
    upload the unsigned artifact. Upload signed version 1001000 to Alpha, use the
    bilingual 1.1.0 notes in `RELEASE_NOTES.md`, and submit for review.
-3. On a phone test New .md -> name/location -> Chinese/emoji text -> Save -> reopen;
-   also test cancel, duplicate filenames, and Save/Discard/Cancel on a dirty file.
+3. After Play delivers the signed release, repeat New .md -> name/location ->
+   Chinese/emoji text -> Save -> reopen and picker cancellation. QA passed locally,
+   but the exact Play-delivered, release-minified package has not been installed yet.
 4. Continue genuine tester recruitment; do not claim production access before the
    Console confirms all testing requirements are met.
 

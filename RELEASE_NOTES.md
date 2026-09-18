@@ -6,6 +6,7 @@
 - Keep the current draft if creation is cancelled or fails.
 - Preserve edits made while a save is pending and prevent overlapping file operations.
 - Reset unsaved-change dialogs so Escape never repeats a previous Discard choice.
+- Restore controls reliably after cancelling the Android system document picker.
 - Open local filenames containing literal percent signs correctly.
 - Remove unsupported Android TV launcher declarations from the phone release.
 

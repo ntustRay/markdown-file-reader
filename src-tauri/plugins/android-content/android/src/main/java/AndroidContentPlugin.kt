@@ -82,6 +82,12 @@ class AndroidContentPlugin(private val activity: Activity) : Plugin(activity) {
 
     @ActivityCallback
     fun openDocumentResult(invoke: Invoke, result: ActivityResult) {
+        // Let Activity/WebView resume before completing the Rust-to-JS response.
+        // Resolving inside the activity callback can leave it queued until the next IPC.
+        activity.window.decorView.post { completeDocumentResult(invoke, result) }
+    }
+
+    private fun completeDocumentResult(invoke: Invoke, result: ActivityResult) {
         try {
             val response = JSObject()
             if (result.resultCode != Activity.RESULT_OK) {
