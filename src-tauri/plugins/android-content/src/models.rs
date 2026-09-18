@@ -8,6 +8,12 @@ pub struct OpenDocumentRequest {
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
+pub struct CreateDocumentRequest {
+    pub suggested_name: String,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct OpenDocumentResponse {
     pub uri: Option<String>,
 }

@@ -3,6 +3,8 @@ export type AppLocale = 'en' | 'zh-TW';
 export interface Translations {
   appName: string;
   openFile: string;
+  newFile: string;
+  createFailed: string;
   noFile: string;
   editorLabel: string;
   edit: string;
@@ -30,6 +32,8 @@ const translations: Record<AppLocale, Translations> = {
   en: {
     appName: 'Ray Markdown Reader',
     openFile: 'Open file',
+    newFile: 'New .md',
+    createFailed: 'The file could not be created. Your current document is still here.',
     noFile: 'No file',
     editorLabel: 'Document editor',
     edit: 'Edit',
@@ -37,7 +41,7 @@ const translations: Record<AppLocale, Translations> = {
     save: 'Save',
     saving: 'Saving…',
     emptyTitle: 'Open a Markdown file',
-    emptyHint: 'Choose one .md, .markdown, or .txt file from your device.',
+    emptyHint: 'Create a .md file, or open a .md, .markdown, or .txt file from your device.',
     unsavedTitle: 'Save your changes?',
     unsavedMessage: 'This file has changes that have not been saved.',
     discard: 'Discard',
@@ -55,6 +59,8 @@ const translations: Record<AppLocale, Translations> = {
   'zh-TW': {
     appName: 'Ray Markdown Reader',
     openFile: '開啟檔案',
+    newFile: '新增 .md',
+    createFailed: '無法建立檔案，目前的文件仍保留。',
     noFile: '尚未開啟檔案',
     editorLabel: '文件編輯器',
     edit: '編輯',
@@ -62,7 +68,7 @@ const translations: Record<AppLocale, Translations> = {
     save: '儲存',
     saving: '儲存中…',
     emptyTitle: '開啟 Markdown 檔案',
-    emptyHint: '從裝置選擇一個 .md、.markdown 或 .txt 檔案。',
+    emptyHint: '建立 .md 檔案，或從裝置開啟 .md、.markdown 或 .txt 檔案。',
     unsavedTitle: '要儲存變更嗎？',
     unsavedMessage: '這個檔案有尚未儲存的變更。',
     discard: '不儲存',

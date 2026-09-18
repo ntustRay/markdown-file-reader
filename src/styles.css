@@ -83,7 +83,7 @@ a:focus-visible {
   z-index: 20;
   inset: 0 0 auto;
   display: grid;
-  grid-template-columns: 48px minmax(0, 1fr) auto 48px;
+  grid-template-columns: 48px minmax(0, 1fr) 48px auto 48px;
   align-items: center;
   min-height: calc(64px + env(safe-area-inset-top));
   padding: env(safe-area-inset-top) max(8px, env(safe-area-inset-right)) 0 max(8px, env(safe-area-inset-left));

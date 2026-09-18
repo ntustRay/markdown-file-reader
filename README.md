@@ -1,9 +1,10 @@
 # Ray Markdown Reader
 
-A focused Android app for opening, reading, editing, and saving one local Markdown or plain-text file.
+A focused Android app for creating, reading, editing, and saving local Markdown or plain-text files, one at a time.
 
-## Version 1.0.0
+## Version 1.1.0
 
+- Creates a `.md` file with **New .md**, using the Android system picker to choose its name and location, then opens the editor
 - Opens one `.md`, `.markdown`, or `.txt` file with the Android system picker
 - Shows Markdown in a full-screen preview and `.txt` as unformatted text
 - Switches the whole screen between Preview and Edit
@@ -37,7 +38,7 @@ Android builds additionally require Android Studio, Java, Android SDK Platform 3
 | --- | --- |
 | App name | Ray Markdown Reader |
 | Package ID | `com.ntustray.raymarkdownreader` |
-| Version | `1.0.0` / version code `1000000` |
+| Version | `1.1.0` / version code `1001000` |
 | Minimum Android | Android 9 / API 28 |
 | Target Android | Android 16 / API 36 |
 | Category | Productivity |

@@ -9,6 +9,14 @@ use crate::{
 };
 
 #[command]
+pub(crate) async fn create_document<R: Runtime>(
+    app: AppHandle<R>,
+    payload: crate::models::CreateDocumentRequest,
+) -> Result<OpenDocumentResponse> {
+    app.android_content().create_document(payload)
+}
+
+#[command]
 pub(crate) async fn open_document<R: Runtime>(
     app: AppHandle<R>,
     payload: OpenDocumentRequest,

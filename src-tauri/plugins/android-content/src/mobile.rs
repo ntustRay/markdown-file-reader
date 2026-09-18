@@ -24,6 +24,13 @@ pub fn init<R: Runtime, C: DeserializeOwned>(
 pub struct AndroidContent<R: Runtime>(PluginHandle<R>);
 
 impl<R: Runtime> AndroidContent<R> {
+    pub fn create_document(
+        &self,
+        payload: crate::models::CreateDocumentRequest,
+    ) -> Result<crate::models::OpenDocumentResponse> {
+        self.0.run_mobile_plugin("createDocument", payload).map_err(Into::into)
+    }
+
     pub fn open_document(
         &self,
         payload: crate::models::OpenDocumentRequest,

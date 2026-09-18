@@ -16,6 +16,13 @@ pub fn init<R: Runtime, C: DeserializeOwned>(
 pub struct AndroidContent<R: Runtime>(#[allow(dead_code)] AppHandle<R>);
 
 impl<R: Runtime> AndroidContent<R> {
+    pub fn create_document(
+        &self,
+        _payload: crate::models::CreateDocumentRequest,
+    ) -> Result<crate::models::OpenDocumentResponse> {
+        Err(Error::UnsupportedPlatform)
+    }
+
     pub fn open_document(
         &self,
         _payload: crate::models::OpenDocumentRequest,

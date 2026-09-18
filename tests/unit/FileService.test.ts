@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { open } from '@tauri-apps/plugin-dialog';
+import { open, save } from '@tauri-apps/plugin-dialog';
 import { readFile, size, writeFile } from '@tauri-apps/plugin-fs';
 import { invoke } from '@tauri-apps/api/core';
 import { hasUnsavedChanges } from '../../src/domain/Document';
@@ -10,6 +10,59 @@ vi.mock('@tauri-apps/plugin-fs');
 vi.mock('@tauri-apps/api/core');
 
 describe('FileService', () => {
+  it('creates an Android Markdown document and saves UTF-8 content back to it', async () => {
+    vi.spyOn(window.navigator, 'userAgent', 'get').mockReturnValue('Android');
+    const uri = 'content://provider/new.md';
+    vi.mocked(invoke)
+      .mockResolvedValueOnce({ uri })
+      .mockResolvedValueOnce(androidContentResponse('new.md', new Uint8Array()))
+      .mockResolvedValueOnce(undefined);
+    const service = new FileService();
+    await expect(service.createDocument()).resolves.toMatchObject({ uri, name: 'new.md', draftContent: '' });
+    expect(invoke).toHaveBeenNthCalledWith(1, 'plugin:android-content|create_document', {
+      payload: { suggestedName: 'Untitled.md' },
+    });
+    service.updateDraft('# 新筆記\n');
+    await service.saveDocument();
+    expect(invoke).toHaveBeenLastCalledWith('plugin:android-content|write_content_uri', {
+      payload: { uri, data: Buffer.from('# 新筆記\n').toString('base64') },
+    });
+    expect(service.getCurrentDocument()?.savedContent).toBe('# 新筆記\n');
+  });
+
+  it('retains the current dirty document when Android creation is cancelled or fails', async () => {
+    vi.spyOn(window.navigator, 'userAgent', 'get').mockReturnValue('Android');
+    vi.mocked(invoke)
+      .mockResolvedValueOnce({ uri: 'content://provider/old.md' })
+      .mockResolvedValueOnce(androidContentResponse('old.md', new TextEncoder().encode('old')))
+      .mockResolvedValueOnce({ uri: null })
+      .mockRejectedValueOnce(new Error('Provider unavailable'));
+    const service = new FileService();
+    await service.openDocument();
+    const draft = service.updateDraft('unsaved');
+    await expect(service.createDocument()).resolves.toBeNull();
+    expect(service.getCurrentDocument()).toBe(draft);
+    await expect(service.createDocument()).rejects.toThrow('Provider unavailable');
+    expect(service.getCurrentDocument()).toBe(draft);
+  });
+
+  it('validates Android creation responses', async () => {
+    vi.spyOn(window.navigator, 'userAgent', 'get').mockReturnValue('Android');
+    vi.mocked(invoke).mockResolvedValueOnce({ uri: 12 });
+    await expect(new FileService().createDocument()).rejects.toThrow('invalid document selection');
+  });
+
+  it('creates a local Markdown file and leaves state unchanged when writing fails', async () => {
+    vi.mocked(save).mockResolvedValue('C:/notes/100% new.md');
+    vi.mocked(writeFile).mockResolvedValueOnce(undefined).mockRejectedValueOnce(new Error('Read only'));
+    const service = new FileService();
+    const created = await service.createDocument();
+    expect(created?.name).toBe('100% new.md');
+    expect(writeFile).toHaveBeenCalledWith('C:/notes/100% new.md', new Uint8Array());
+    await expect(service.createDocument()).rejects.toThrow('Read only');
+    expect(service.getCurrentDocument()).toBe(created);
+  });
+
   it.each(['100% complete.md', 'literal%20name.md', 'literal%2Fname.txt'])(
     'preserves the literal local filename %s', async (name) => {
       vi.mocked(open).mockResolvedValue(`C:/notes/${name}`);

@@ -32,8 +32,35 @@ class OpenDocumentArgs {
     lateinit var mimeTypes: Array<String>
 }
 
+@InvokeArg
+class CreateDocumentArgs {
+    lateinit var suggestedName: String
+}
+
 @TauriPlugin
 class AndroidContentPlugin(private val activity: Activity) : Plugin(activity) {
+    @Command
+    fun createDocument(invoke: Invoke) {
+        try {
+            val args = invoke.parseArgs(CreateDocumentArgs::class.java)
+            require(args.suggestedName.endsWith(".md", ignoreCase = true)) {
+                "A Markdown filename is required"
+            }
+            val intent = Intent(Intent.ACTION_CREATE_DOCUMENT)
+            intent.addCategory(Intent.CATEGORY_OPENABLE)
+            intent.type = "text/markdown"
+            intent.putExtra(Intent.EXTRA_TITLE, args.suggestedName)
+            intent.addFlags(
+                Intent.FLAG_GRANT_READ_URI_PERMISSION or
+                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION or
+                    Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION
+            )
+            startActivityForResult(invoke, intent, "openDocumentResult")
+        } catch (error: Exception) {
+            invoke.reject(error.message ?: "Unable to create a document")
+        }
+    }
+
     @Command
     fun openDocument(invoke: Invoke) {
         try {

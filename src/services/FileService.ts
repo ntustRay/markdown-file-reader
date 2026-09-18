@@ -1,4 +1,4 @@
-import { open } from '@tauri-apps/plugin-dialog';
+import { open, save } from '@tauri-apps/plugin-dialog';
 import { readFile, size, writeFile } from '@tauri-apps/plugin-fs';
 import { invoke } from '@tauri-apps/api/core';
 import {
@@ -13,6 +13,26 @@ import {
 export class FileService {
   private currentDocument: DocumentFile | null = null;
   private documentGeneration = 0;
+
+  async createDocument(): Promise<DocumentFile | null> {
+    const selected = isAndroidRuntime()
+      ? selectedDocumentUri(await invoke<unknown>('plugin:android-content|create_document', {
+          payload: { suggestedName: 'Untitled.md' },
+        }))
+      : await save({ defaultPath: 'Untitled.md', filters: [{ name: 'Markdown', extensions: ['md'] }] });
+    if (selected === null) return null;
+
+    const file = isAndroidContentUri(selected)
+      ? await readAndroidContentUri(selected)
+      : { name: getDocumentName(selected), bytes: new Uint8Array() };
+    const document = decodeDocument({ uri: selected, ...file });
+    if (!isAndroidContentUri(selected)) {
+      await writeFile(selected, new Uint8Array());
+    }
+    this.currentDocument = document;
+    this.documentGeneration += 1;
+    return document;
+  }
 
   async openDocument(): Promise<DocumentFile | null> {
     const selected = isAndroidRuntime()
@@ -103,6 +123,10 @@ async function openAndroidDocument(): Promise<string | null> {
       mimeTypes: ['text/markdown', 'text/x-markdown', 'text/plain'],
     },
   });
+  return selectedDocumentUri(response);
+}
+
+function selectedDocumentUri(response: unknown): string | null {
   if (
     typeof response !== 'object' ||
     response === null ||

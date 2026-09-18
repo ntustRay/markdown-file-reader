@@ -1,4 +1,4 @@
-const COMMANDS: &[&str] = &["open_document", "read_content_uri", "write_content_uri"];
+const COMMANDS: &[&str] = &["open_document", "create_document", "read_content_uri", "write_content_uri"];
 
 fn main() {
     tauri_plugin::Builder::new(COMMANDS)

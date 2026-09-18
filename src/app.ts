@@ -33,11 +33,14 @@ export class App {
   private mode: ViewMode = 'preview';
   private isClosing = false;
   private isSaving = false;
+  private isReplacing = false;
 
   private readonly appName = requiredElement('app-name', HTMLSpanElement);
   private readonly fileName = requiredElement('file-name', HTMLSpanElement);
   private readonly openFileButton = requiredElement('open-file', HTMLButtonElement);
   private readonly emptyOpenFileButton = requiredElement('empty-open-file', HTMLButtonElement);
+  private readonly newFileButton = requiredElement('new-file', HTMLButtonElement);
+  private readonly emptyNewFileButton = requiredElement('empty-new-file', HTMLButtonElement);
   private readonly saveButton = requiredElement('save-file', HTMLButtonElement);
   private readonly themeButton = requiredElement('theme-toggle', HTMLButtonElement);
   private readonly emptyState = requiredElement('empty-state', HTMLElement);
@@ -61,6 +64,8 @@ export class App {
     this.bindEvents();
     this.openFileButton.hidden = false;
     this.emptyOpenFileButton.hidden = false;
+    this.newFileButton.hidden = false;
+    this.emptyNewFileButton.hidden = false;
     this.updateView();
     if (isTauri()) {
       void this.bindWindowClose();
@@ -70,6 +75,8 @@ export class App {
   private bindEvents(): void {
     this.openFileButton.addEventListener('click', () => void this.openFile());
     this.emptyOpenFileButton.addEventListener('click', () => void this.openFile());
+    this.newFileButton.addEventListener('click', () => void this.openFile(true));
+    this.emptyNewFileButton.addEventListener('click', () => void this.openFile(true));
     this.saveButton.addEventListener('click', () => void this.saveFile());
     this.themeButton.addEventListener('click', () => {
       this.updateThemeControl(this.themeService.toggleTheme());
@@ -87,6 +94,10 @@ export class App {
       if (this.isClosing) {
         return;
       }
+      if (this.isSaving || this.isReplacing || this.unsavedDialog.open) {
+        event.preventDefault();
+        return;
+      }
       const current = this.fileService.getCurrentDocument();
       if (current === null || !hasUnsavedChanges(current)) {
         return;
@@ -96,30 +107,40 @@ export class App {
     });
   }
 
-  private async openFile(): Promise<void> {
-    if (this.isSaving) return;
-    const current = this.fileService.getCurrentDocument();
-    if (current !== null && hasUnsavedChanges(current)) {
-      const decision = await this.confirmUnsavedChanges();
-      if (decision === 'cancel') {
-        return;
-      }
-      if (decision === 'save' && !(await this.saveFile())) {
-        return;
-      }
-    }
-
+  private async openFile(create = false): Promise<void> {
+    if (this.isSaving || this.isReplacing || this.unsavedDialog.open) return;
+    this.isReplacing = true;
+    this.editor.readOnly = true;
+    this.updateDocumentControls();
     try {
-      const document = await this.fileService.openDocument();
+      const current = this.fileService.getCurrentDocument();
+      if (current !== null && hasUnsavedChanges(current)) {
+        const decision = await this.confirmUnsavedChanges();
+        if (decision === 'cancel') {
+          return;
+        }
+        if (decision === 'save' && !(await this.saveFile())) {
+          return;
+        }
+      }
+
+      const document = create
+        ? await this.fileService.createDocument()
+        : await this.fileService.openDocument();
       if (document === null) {
         return;
       }
-      this.mode = 'preview';
+      this.mode = create ? 'edit' : 'preview';
       this.editor.value = document.draftContent;
       await this.renderPreview(document);
       this.updateView();
     } catch (error: unknown) {
-      this.showNotice(this.messageForOpenError(error));
+      this.showNotice(create ? this.t('createFailed') : this.messageForOpenError(error));
+    } finally {
+      this.isReplacing = false;
+      this.editor.readOnly = false;
+      this.updateDocumentControls();
+      if (create && this.mode === 'edit') this.editor.focus();
     }
   }
 
@@ -131,6 +152,7 @@ export class App {
     this.isSaving = true;
     this.saveButton.disabled = true;
     this.saveButton.textContent = this.t('saving');
+    this.updateDocumentControls();
     try {
       await this.fileService.saveDocument();
       const current = this.fileService.getCurrentDocument();
@@ -145,6 +167,7 @@ export class App {
   }
 
   private async toggleMode(): Promise<void> {
+    if (this.isReplacing) return;
     const current = this.fileService.getCurrentDocument();
     if (current === null) {
       return;
@@ -204,6 +227,7 @@ export class App {
         resolve(value === 'save' || value === 'discard' ? value : 'cancel');
       };
       this.unsavedDialog.addEventListener('close', handleClose);
+      this.unsavedDialog.returnValue = 'cancel';
       this.unsavedDialog.showModal();
     });
   }
@@ -222,6 +246,12 @@ export class App {
   }
 
   private updateDocumentControls(): void {
+    const busy = this.isSaving || this.isReplacing;
+    this.openFileButton.disabled = busy;
+    this.emptyOpenFileButton.disabled = busy;
+    this.newFileButton.disabled = busy;
+    this.emptyNewFileButton.disabled = busy;
+    this.modeButton.disabled = this.isReplacing;
     const current = this.fileService.getCurrentDocument();
     if (current === null) {
       this.fileName.textContent = this.t('noFile');
@@ -231,7 +261,7 @@ export class App {
     const isDirty = hasUnsavedChanges(current);
     this.fileName.textContent = isDirty ? `${current.name} •` : current.name;
     this.saveButton.textContent = this.t(this.isSaving ? 'saving' : 'save');
-    this.saveButton.disabled = this.isSaving || !isDirty;
+    this.saveButton.disabled = busy || !isDirty;
   }
 
   private updateThemeControl(theme: Theme): void {
@@ -250,6 +280,8 @@ export class App {
     this.appName.textContent = this.t('appName');
     this.openFileButton.setAttribute('aria-label', this.t('openFile'));
     this.emptyOpenFileButton.textContent = this.t('openFile');
+    this.newFileButton.setAttribute('aria-label', this.t('newFile'));
+    this.emptyNewFileButton.textContent = this.t('newFile');
     this.emptyTitle.textContent = this.t('emptyTitle');
     this.emptyHint.textContent = this.t('emptyHint');
     this.editor.setAttribute('aria-label', this.t('editorLabel'));

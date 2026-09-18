@@ -19,6 +19,8 @@ test.describe('mobile single-document shell', () => {
     try {
       await expect(page.locator('#open-file')).toBeHidden();
       await expect(page.locator('#empty-open-file')).toBeHidden();
+      await expect(page.locator('#new-file')).toBeHidden();
+      await expect(page.locator('#empty-new-file')).toBeHidden();
     } finally {
       releaseMainModule();
       await navigation;
@@ -26,6 +28,8 @@ test.describe('mobile single-document shell', () => {
 
     await expect(page.locator('#open-file')).toBeVisible();
     await expect(page.locator('#empty-open-file')).toBeVisible();
+    await expect(page.locator('#new-file')).toBeVisible();
+    await expect(page.locator('#empty-new-file')).toBeVisible();
   });
 
   test.beforeEach(async ({ page }) => {

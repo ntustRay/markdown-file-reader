@@ -1,6 +1,6 @@
 {
   "productName": "Ray Markdown Reader",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "identifier": "com.ntustray.raymarkdownreader",
   "build": {
     "beforeDevCommand": "npm run dev",
@@ -37,11 +37,11 @@
     ],
     "android": {
       "minSdkVersion": 28,
-      "versionCode": 1000000
+      "versionCode": 1001000
     },
     "category": "Productivity",
-    "shortDescription": "Open, read, edit, and save one local Markdown file.",
-    "longDescription": "Ray Markdown Reader is a focused, offline-first Markdown and plain-text reader and editor for Android. Open one local file, switch between full-screen preview and editing, and save changes back to the same file."
+    "shortDescription": "Create, read, edit, and save local Markdown files.",
+    "longDescription": "Ray Markdown Reader is a focused, offline-first Markdown and plain-text reader and editor for Android. Create a Markdown file or open a local file, switch between full-screen preview and editing, and save changes back to the same file."
   },
   "plugins": {}
 }

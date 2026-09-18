@@ -5,6 +5,7 @@ Read and write Android document URIs selected by the user
 #### This default permission set includes the following:
 
 - `allow-open-document`
+- `allow-create-document`
 - `allow-read-content-uri`
 - `allow-write-content-uri`
 
@@ -16,6 +17,32 @@ Read and write Android document URIs selected by the user
 <th>Description</th>
 </tr>
 
+
+<tr>
+<td>
+
+`android-content:allow-create-document`
+
+</td>
+<td>
+
+Enables the create_document command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`android-content:deny-create-document`
+
+</td>
+<td>
+
+Denies the create_document command without any pre-configured scope.
+
+</td>
+</tr>
 
 <tr>
 <td>

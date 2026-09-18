@@ -295,6 +295,18 @@
       "type": "string",
       "oneOf": [
         {
+          "description": "Enables the create_document command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-create-document",
+          "markdownDescription": "Enables the create_document command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the create_document command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-create-document",
+          "markdownDescription": "Denies the create_document command without any pre-configured scope."
+        },
+        {
           "description": "Enables the open_document command without any pre-configured scope.",
           "type": "string",
           "const": "allow-open-document",
@@ -331,10 +343,10 @@
           "markdownDescription": "Denies the write_content_uri command without any pre-configured scope."
         },
         {
-          "description": "Read and write Android document URIs selected by the user\n#### This default permission set includes:\n\n- `allow-open-document`\n- `allow-read-content-uri`\n- `allow-write-content-uri`",
+          "description": "Read and write Android document URIs selected by the user\n#### This default permission set includes:\n\n- `allow-open-document`\n- `allow-create-document`\n- `allow-read-content-uri`\n- `allow-write-content-uri`",
           "type": "string",
           "const": "default",
-          "markdownDescription": "Read and write Android document URIs selected by the user\n#### This default permission set includes:\n\n- `allow-open-document`\n- `allow-read-content-uri`\n- `allow-write-content-uri`"
+          "markdownDescription": "Read and write Android document URIs selected by the user\n#### This default permission set includes:\n\n- `allow-open-document`\n- `allow-create-document`\n- `allow-read-content-uri`\n- `allow-write-content-uri`"
         }
       ]
     }

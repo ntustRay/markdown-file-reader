@@ -33,6 +33,7 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
     Builder::new("android-content")
         .invoke_handler(tauri::generate_handler![
             commands::open_document,
+            commands::create_document,
             commands::read_content_uri,
             commands::write_content_uri
         ])
