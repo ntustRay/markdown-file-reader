@@ -30,6 +30,7 @@ src-tauri/target
 src-tauri/gen
 *.jks
 *.keystore
+*.p12
 keystore.properties
 key.properties
 

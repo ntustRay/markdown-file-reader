@@ -35,29 +35,48 @@ Updated: 2026-09-18
   - SHA-256: `44C2E290F321E820CC5D5B5F0E7028FF45355D2B6DD3D614C2737A0BDCB2B372`
   - Package `com.ntustray.raymarkdownreader`, version `1.1.0` / `1001000`,
     min SDK 28, target SDK 36, ARM64 + ARMv7, no new Android permissions.
-- Signing is blocked: upload keystore exists, but signing passwords are not in
-  the process environment. Do not search for, save, or request passwords in chat.
-  Local generated Gradle signing is conditional so unsigned packaging is possible.
+- Signing is blocked: user confirmed the original upload-keystore password is
+  forgotten. Keep the original key; use an upload-key reset, not app-signing-key rotation.
+  Do not search for, save, or request passwords in chat. Local generated Gradle
+  signing is conditional so unsigned packaging is possible.
+- September 18 live Console check: Play App Signing enabled; upload certificate
+  SHA-256 `C5:D5:92:70:E7:11:87:51:AA:17:75:5C:87:6B:0B:09:79:E0:CD:CE:60:9D:1E:70:30:E3:26:0B:C9:ED:23:DD`.
+  Reset dialog is open with reason "I forgot my KeyStore password" selected.
+  No replacement key has been generated, no certificate uploaded, and no reset submitted.
+  Credential entry and final reset submission must be performed by the user.
 - **Google Play has NOT been updated to 1.1.0.** Historical Console statuses below
   were last checked September 6 and are not current verification.
 
 ### Resume release
 
-1. Sign locally in an interactive terminal (jarsigner prompts for the keystore
-   password; do not put it in the command). Run from the repository root:
+1. In a local interactive terminal run the prepared helper. The user must enter
+   and save a NEW password; keytool hides input and prompts again for export:
 
    ```powershell
-   & "$env:JAVA_HOME/bin/jarsigner.exe" -keystore C:\Users\MingRay\AndroidKeys\ray-markdown-reader-upload.jks -signedjar src-tauri/target/RayMarkdownReader-1.1.0.aab src-tauri/target/RayMarkdownReader-1.1.0-unsigned.aab upload
+   powershell -NoProfile -ExecutionPolicy Bypass -File C:\Users\MingRay\markdown-file-reader\scripts\prepare-upload-key.ps1
+   ```
+
+   It creates `C:\Users\MingRay\AndroidKeys\ray-markdown-reader-upload-20260918.p12`
+   and its public `.pem` certificate without overwriting the old key. Keep `.p12`
+   private and backed up; store the password in the user's password manager.
+   User uploads only the `.pem` and submits the reset at:
+   https://play.google.com/console/u/3/developers/8045858168635919948/app/4975185405411915289/keymanagement
+
+2. Verify reset approval/effective time in Console; do not assume an immediate change.
+   Then sign locally with the new upload key (user enters the new password):
+
+   ```powershell
+   & "$env:JAVA_HOME/bin/jarsigner.exe" -keystore C:\Users\MingRay\AndroidKeys\ray-markdown-reader-upload-20260918.p12 -signedjar src-tauri/target/RayMarkdownReader-1.1.0.aab src-tauri/target/RayMarkdownReader-1.1.0-unsigned.aab upload
    & "$env:JAVA_HOME/bin/jarsigner.exe" -verify src-tauri/target/RayMarkdownReader-1.1.0.aab
    ```
 
-2. Verify signing certificate against the existing Play upload certificate. Never
+3. Verify signing certificate against the NEW active Play upload certificate. Never
    upload the unsigned artifact. Upload signed version 1001000 to Alpha, use the
    bilingual 1.1.0 notes in `RELEASE_NOTES.md`, and submit for review.
-3. After Play delivers the signed release, repeat New .md -> name/location ->
+4. After Play delivers the signed release, repeat New .md -> name/location ->
    Chinese/emoji text -> Save -> reopen and picker cancellation. QA passed locally,
    but the exact Play-delivered, release-minified package has not been installed yet.
-4. Continue genuine tester recruitment; do not claim production access before the
+5. Continue genuine tester recruitment; do not claim production access before the
    Console confirms all testing requirements are met.
 
 ## Completed
